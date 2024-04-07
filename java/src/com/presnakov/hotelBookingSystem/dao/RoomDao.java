@@ -5,6 +5,9 @@ import com.presnakov.hotelBookingSystem.exception.DaoException;
 import com.presnakov.hotelBookingSystem.util.ConnectionManager;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class RoomDao {
 
@@ -15,10 +18,85 @@ public class RoomDao {
             """;
     public static final String SAVE_SQL = """
             INSERT INTO room (room_occupancy, room_class_id, room_status_id, hotel_id)
-            VALUES (?, ?, ?, ?);    
+            VALUES (?, ?, ?, ?);
+            """;
+
+    public static final String UPDATE_SQL = """
+            UPDATE room
+            SET room_occupancy = ?,
+                room_class_id = ?,
+                room_status_id = ?,
+                hotel_id = ?
+             WHERE id = ?          
+            """;
+    public static final String FIND_ALL_ID_SQL = """
+            SELECT id,
+            room_occupancy,
+            room_class_id,
+            room_status_id,
+            hotel_id
+            FROM room
+            """;
+    public static final String FIND_BY_ID_SQL = FIND_ALL_ID_SQL + """
+            WHERE id = ?
             """;
 
     private RoomDao() {
+    }
+
+    public List<Room> findAll() {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_ALL_ID_SQL)) {
+            var resultSet = preparedStatement.executeQuery();
+            List<Room> rooms = new ArrayList<>();
+            while (resultSet.next()) {
+                rooms.add(buildRoom(resultSet));
+            }
+            return rooms;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
+    }
+
+    public Optional<Room> findById(Long id) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+            preparedStatement.setLong(1, id);
+
+            var resultSet = preparedStatement.executeQuery();
+            Room room = null;
+            if (resultSet.next()) {
+                room = buildRoom(resultSet);
+            }
+            return Optional.ofNullable(room);
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
+    }
+
+    private static Room buildRoom(ResultSet resultSet) throws SQLException {
+        return new Room(
+                resultSet.getLong("id"),
+                resultSet.getLong("room_occupancy"),
+                resultSet.getLong("room_class_id"),
+                resultSet.getLong("room_status_id"),
+                resultSet.getLong("hotel_id")
+        );
+    }
+
+    public void update(Room room) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setLong(1, room.getRoomOccupancy());
+            preparedStatement.setLong(2, room.getRoomClassId());
+            preparedStatement.setLong(3, room.getRoomStatusId());
+            preparedStatement.setLong(4, room.getHotelId());
+            preparedStatement.setLong(5, room.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
     }
 
     public Room save(Room room) {
@@ -32,7 +110,7 @@ public class RoomDao {
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
-            if(generatedKeys.next()) {
+            if (generatedKeys.next()) {
                 room.setId(generatedKeys.getLong("id"));
             }
             return room;
