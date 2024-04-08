@@ -1,6 +1,7 @@
 package com.presnakov.hotelBookingSystem;
 
 import com.presnakov.hotelBookingSystem.dao.RoomDao;
+import com.presnakov.hotelBookingSystem.dto.RoomFilter;
 import com.presnakov.hotelBookingSystem.entity.Room;
 
 import java.util.Optional;
@@ -8,7 +9,9 @@ import java.util.Optional;
 public class DaoRunner {
 
     public static void main(String[] args) {
-        var rooms = RoomDao.getInstance().findAll();
+
+        var roomFilter = new RoomFilter(3, 0, 2, 1, 1, 1);
+        var rooms = RoomDao.getInstance().findAll(roomFilter);
         System.out.println(rooms);
     }
 

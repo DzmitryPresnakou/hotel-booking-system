@@ -1,5 +1,6 @@
 package com.presnakov.hotelBookingSystem.dao;
 
+import com.presnakov.hotelBookingSystem.dto.RoomFilter;
 import com.presnakov.hotelBookingSystem.entity.Room;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 import com.presnakov.hotelBookingSystem.util.ConnectionManager;
@@ -8,6 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.joining;
 
 public class RoomDao {
 
@@ -20,7 +23,6 @@ public class RoomDao {
             INSERT INTO room (room_occupancy, room_class_id, room_status_id, hotel_id)
             VALUES (?, ?, ?, ?);
             """;
-
     public static final String UPDATE_SQL = """
             UPDATE room
             SET room_occupancy = ?,
@@ -29,7 +31,7 @@ public class RoomDao {
                 hotel_id = ?
              WHERE id = ?          
             """;
-    public static final String FIND_ALL_ID_SQL = """
+    public static final String FIND_ALL_SQL = """
             SELECT id,
             room_occupancy,
             room_class_id,
@@ -37,16 +39,57 @@ public class RoomDao {
             hotel_id
             FROM room
             """;
-    public static final String FIND_BY_ID_SQL = FIND_ALL_ID_SQL + """
+    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
 
     private RoomDao() {
     }
 
+    public List<Room> findAll(RoomFilter filter) {
+        List<Object> parameters = new ArrayList<>();
+        List<String> whereSql = new ArrayList<>();
+        if (filter.roomOccupancy() != null) {
+            whereSql.add("room_occupancy = ?");
+            parameters.add(filter.roomOccupancy());
+        }
+        if (filter.roomClassId() != null) {
+            whereSql.add("room_class_id = ?");
+            parameters.add(filter.roomClassId());
+        }
+        if (filter.roomStatusId() != null) {
+            whereSql.add("room_status_id = ?");
+            parameters.add(filter.roomStatusId());
+        }
+        if (filter.hotelId() != null) {
+            whereSql.add("hotel_id = ?");
+            parameters.add(filter.hotelId());
+        }
+        parameters.add(filter.limit());
+        parameters.add(filter.offset());
+        var where = whereSql.stream()
+                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ?"));
+        var sql = FIND_ALL_SQL + where;
+
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < parameters.size(); i++) {
+                preparedStatement.setObject(i + 1, parameters.get(i));
+            }
+            var resultSet = preparedStatement.executeQuery();
+            List<Room> rooms = new ArrayList<>();
+            while (resultSet.next()) {
+                rooms.add(buildRoom(resultSet));
+            }
+            return rooms;
+        } catch (SQLException throwables) {
+            throw new DaoException(throwables);
+        }
+    }
+
     public List<Room> findAll() {
         try (var connection = ConnectionManager.get();
-             var preparedStatement = connection.prepareStatement(FIND_ALL_ID_SQL)) {
+             var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
             var resultSet = preparedStatement.executeQuery();
             List<Room> rooms = new ArrayList<>();
             while (resultSet.next()) {
