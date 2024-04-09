@@ -1,17 +1,17 @@
-package com.presnakov.hotelBookingSystem;
+package com.presnakov.hotelBookingSystem.model;
 
 import com.presnakov.hotelBookingSystem.dao.RoomDao;
-import com.presnakov.hotelBookingSystem.dto.RoomFilter;
 import com.presnakov.hotelBookingSystem.entity.Room;
+import com.presnakov.hotelBookingSystem.entity.RoomClass;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class DaoRunner {
 
     public static void main(String[] args) {
 
-        var roomFilter = new RoomFilter(3, 0, 2, 1, 1, 1);
-        var rooms = RoomDao.getInstance().findAll(roomFilter);
+        var rooms = RoomDao.getInstance().findById(1L);
         System.out.println(rooms);
     }
 
@@ -35,8 +35,9 @@ public class DaoRunner {
     private static void saveTest() {
         var roomDao = RoomDao.getInstance();
         var room = new Room();
+        var roomClass = new RoomClass(10L, "comfort", new BigDecimal(49.9));
         room.setRoomOccupancy(2L);
-        room.setRoomClassId(1L);
+        room.setRoomClass(roomClass);
         room.setRoomStatusId(1L);
         room.setHotelId(1L);
         var savedRoom = roomDao.save(room);
