@@ -1,7 +1,5 @@
 package com.presnakov.hotelBookingSystem.dao;
 
-import com.presnakov.hotelBookingSystem.entity.Room;
-
 import java.util.List;
 import java.util.Optional;
 
