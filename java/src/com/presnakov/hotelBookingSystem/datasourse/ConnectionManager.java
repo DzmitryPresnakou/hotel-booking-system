@@ -1,4 +1,4 @@
-package com.presnakov.hotelBookingSystem.util;
+package com.presnakov.hotelBookingSystem.datasourse;
 
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -15,6 +15,7 @@ public final class ConnectionManager {
     private static final String USERNAME_KEY = "db.username";
     private static final String URL_KEY = "db.url";
     private static final String POOL_SIZE_KEY = "db.pool.size";
+    private static final String POSTGRESQL_DRIVER_URL = "postgresql.driver.url";
     private static final Integer DEFAULT_POOL_SIZE = 10;
     private static BlockingQueue<Connection> pool;
     private static List<Connection> sourceConnections;
@@ -66,7 +67,7 @@ public final class ConnectionManager {
 
     private static void loadDriver() {
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(PropertiesUtil.get(POSTGRESQL_DRIVER_URL));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

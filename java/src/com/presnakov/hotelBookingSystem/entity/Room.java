@@ -6,14 +6,14 @@ public class Room {
 
     private Long id;
     private Long roomOccupancy;
-    private Long roomClassId;
+    private RoomClass roomClass;
     private Long roomStatusId;
     private Long hotelId;
 
-    public Room(Long id, Long roomOccupancy, Long roomClassId, Long roomStatusId, Long hotelId) {
+    public Room(Long id, Long roomOccupancy, RoomClass roomClass, Long roomStatusId, Long hotelId) {
         this.id = id;
         this.roomOccupancy = roomOccupancy;
-        this.roomClassId = roomClassId;
+        this.roomClass = roomClass;
         this.roomStatusId = roomStatusId;
         this.hotelId = hotelId;
     }
@@ -37,12 +37,12 @@ public class Room {
         this.roomOccupancy = roomOccupancy;
     }
 
-    public Long getRoomClassId() {
-        return roomClassId;
+    public RoomClass getRoomClass() {
+        return roomClass;
     }
 
-    public void setRoomClassId(Long roomClassId) {
-        this.roomClassId = roomClassId;
+    public void setRoomClass(RoomClass roomClass) {
+        this.roomClass = roomClass;
     }
 
     public Long getRoomStatusId() {
@@ -66,12 +66,12 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Objects.equals(id, room.id) && Objects.equals(roomOccupancy, room.roomOccupancy) && Objects.equals(roomClassId, room.roomClassId) && Objects.equals(roomStatusId, room.roomStatusId) && Objects.equals(hotelId, room.hotelId);
+        return Objects.equals(id, room.id) && Objects.equals(roomOccupancy, room.roomOccupancy) && Objects.equals(roomClass, room.roomClass) && Objects.equals(roomStatusId, room.roomStatusId) && Objects.equals(hotelId, room.hotelId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roomOccupancy, roomClassId, roomStatusId, hotelId);
+        return Objects.hash(id, roomOccupancy, roomClass, roomStatusId, hotelId);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Room {
         return "Room{" +
                "id=" + id +
                ", roomOccupancy=" + roomOccupancy +
-               ", roomClassId=" + roomClassId +
+               ", roomClass=" + roomClass +
                ", roomStatusId=" + roomStatusId +
                ", hotelId=" + hotelId +
                '}';
