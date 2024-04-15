@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="hotel-booking-system:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/hotel_booking_system_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="hotel-booking-system/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="hotel-booking-system" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="D:/Google Drive/Java/postgresql-42.7.3.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
