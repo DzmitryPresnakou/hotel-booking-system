@@ -1,7 +1,10 @@
 package com.presnakov.hotelBookingSystem.dao;
+
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.entity.RoomClass;
-import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
+import com.presnakov.hotelBookingSystem.entity.PaymentStatus;
+import com.presnakov.hotelBookingSystem.entity.PaymentStatusEnum;
+import com.presnakov.hotelBookingSystem.entity.RoomStatus;
+import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
@@ -12,40 +15,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomClassDao implements Dao<Long, RoomClass> {
+public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
-    public static final RoomClassDao INSTANCE = new RoomClassDao();
+
+    public static final PaymentStatusDao INSTANCE = new PaymentStatusDao();
 
     private static final String DELETE_SQL = """
-            DELETE FROM room_class
+            DELETE FROM payment_status
             WHERE id = ?
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO room_class (class, price_per_day)
-            VALUES (?, ?);
+            INSERT INTO payment_status (payment_status)
+            VALUES (?);
             """;
     private static final String UPDATE_SQL = """
-            UPDATE room_class
-            SET class = ?,
-                price_per_day = ?
+            UPDATE payment_status
+            SET payment_status = ?
              WHERE id = ?;
              """;
 
     public static final String FIND_ALL_SQL = """
             SELECT id,
-            class,
-            price_per_day
-            FROM room_class
+            payment_status,
+            FROM payment_status
             """;
 
     public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
 
-    private RoomClassDao() {
+    private PaymentStatusDao() {
     }
 
-    public static RoomClassDao getInstance() {
+    public static PaymentStatusDao getInstance() {
         return INSTANCE;
     }
 
@@ -56,83 +58,81 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             prepareStatement.setLong(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Payment status with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public RoomClass save(RoomClass roomClass) {
+    public PaymentStatus save(PaymentStatus paymentStatus) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setBigDecimal(2, roomClass.getPricePerDay());
+            preparedStatement.setString(1, String.valueOf(paymentStatus.getPaymentStatusEnum()));
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomClass.setId(generatedKeys.getLong("id"));
+                paymentStatus.setId(generatedKeys.getLong("id"));
             }
-            return roomClass;
+            return paymentStatus;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Payment status with id %s not found", paymentStatus.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public void update(RoomClass roomClass) {
+    public void update(PaymentStatus paymentStatus) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setLong(2, roomClass.getId());
+            preparedStatement.setString(1, String.valueOf(paymentStatus.getPaymentStatusEnum()));
+            preparedStatement.setLong(2, paymentStatus.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Payment status with id %s not found", paymentStatus.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public Optional<RoomClass> findById(Long id) {
+    public Optional<PaymentStatus> findById(Long id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Payment Status with id %s not found", id), throwables);
         }
     }
 
-    public Optional<RoomClass> findById(Long id, Connection connection) {
+    public Optional<PaymentStatus> findById(Long id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
             var resultSet = preparedStatement.executeQuery();
-            RoomClass roomClass = null;
+            PaymentStatus paymentStatus = null;
             if (resultSet.next()) {
-                roomClass = buildRoomClasses(resultSet);
+                paymentStatus = buildPaymentStatus(resultSet);
             }
-            return Optional.ofNullable(roomClass);
+            return Optional.ofNullable(paymentStatus);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Payment Status with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public List<RoomClass> findAll() {
+    public List<PaymentStatus> findAll() {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
             var resultSet = preparedStatement.executeQuery();
-            List<RoomClass> roomClasses = new ArrayList<>();
+            List<PaymentStatus> paymentStatusses = new ArrayList<>();
             while (resultSet.next()) {
-                roomClasses.add(buildRoomClasses(resultSet));
+                paymentStatusses.add(buildPaymentStatus(resultSet));
             }
-            return roomClasses;
+            return paymentStatusses;
         } catch (SQLException throwables) {
-            throw new DaoException("Room classes not found", throwables);
+            throw new DaoException("Payment Status not found", throwables);
         }
     }
 
-    private RoomClass buildRoomClasses(ResultSet resultSet) throws SQLException {
-        return new RoomClass(
+    private PaymentStatus buildPaymentStatus(ResultSet resultSet) throws SQLException {
+        return new PaymentStatus(
                 resultSet.getLong("id"),
-                RoomClassEnum.valueOf(resultSet.getObject("class", String.class)),
-                resultSet.getBigDecimal("price_per_day")
+                PaymentStatusEnum.valueOf(resultSet.getObject("payment_status", String.class))
         );
     }
 }

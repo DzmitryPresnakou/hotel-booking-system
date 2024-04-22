@@ -1,7 +1,7 @@
 package com.presnakov.hotelBookingSystem.dao;
+
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.entity.RoomClass;
-import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
+import com.presnakov.hotelBookingSystem.entity.Hotel;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
@@ -12,40 +12,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomClassDao implements Dao<Long, RoomClass> {
+public class HotelDao implements Dao<Long, Hotel> {
 
-    public static final RoomClassDao INSTANCE = new RoomClassDao();
+    public static final HotelDao INSTANCE = new HotelDao();
 
     private static final String DELETE_SQL = """
-            DELETE FROM room_class
+            DELETE FROM hotel
             WHERE id = ?
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO room_class (class, price_per_day)
-            VALUES (?, ?);
+            INSERT INTO hotel (name)
+            VALUES (?);
             """;
     private static final String UPDATE_SQL = """
-            UPDATE room_class
-            SET class = ?,
-                price_per_day = ?
+            UPDATE hotel
+            SET name = ?
              WHERE id = ?;
              """;
 
     public static final String FIND_ALL_SQL = """
             SELECT id,
-            class,
-            price_per_day
-            FROM room_class
+            name
+            FROM hotel
             """;
 
     public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
 
-    private RoomClassDao() {
+    private HotelDao() {
     }
 
-    public static RoomClassDao getInstance() {
+    public static HotelDao getInstance() {
         return INSTANCE;
     }
 
@@ -56,42 +54,41 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             prepareStatement.setLong(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Hotel with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public RoomClass save(RoomClass roomClass) {
+    public Hotel save(Hotel hotel) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setBigDecimal(2, roomClass.getPricePerDay());
+            preparedStatement.setString(1, hotel.getName());
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomClass.setId(generatedKeys.getLong("id"));
+                hotel.setId(generatedKeys.getLong("id"));
             }
-            return roomClass;
+            return hotel;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Hotel with id %s not found", hotel.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public void update(RoomClass roomClass) {
+    public void update(Hotel hotel) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setLong(2, roomClass.getId());
+            preparedStatement.setString(1, hotel.getName());
+            preparedStatement.setLong(2, hotel.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Hotel with id %s not found", hotel.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public Optional<RoomClass> findById(Long id) {
+    public Optional<Hotel> findById(Long id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -99,40 +96,39 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
         }
     }
 
-    public Optional<RoomClass> findById(Long id, Connection connection) {
+    public Optional<Hotel> findById(Long id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
             var resultSet = preparedStatement.executeQuery();
-            RoomClass roomClass = null;
+            Hotel hotel = null;
             if (resultSet.next()) {
-                roomClass = buildRoomClasses(resultSet);
+                hotel = buildHotel(resultSet);
             }
-            return Optional.ofNullable(roomClass);
+            return Optional.ofNullable(hotel);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Hotel with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public List<RoomClass> findAll() {
+    public List<Hotel> findAll() {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
             var resultSet = preparedStatement.executeQuery();
-            List<RoomClass> roomClasses = new ArrayList<>();
+            List<Hotel> hotels = new ArrayList<>();
             while (resultSet.next()) {
-                roomClasses.add(buildRoomClasses(resultSet));
+                hotels.add(buildHotel(resultSet));
             }
-            return roomClasses;
+            return hotels;
         } catch (SQLException throwables) {
-            throw new DaoException("Room classes not found", throwables);
+            throw new DaoException("Hotels not found", throwables);
         }
     }
 
-    private RoomClass buildRoomClasses(ResultSet resultSet) throws SQLException {
-        return new RoomClass(
+    private Hotel buildHotel(ResultSet resultSet) throws SQLException {
+        return new Hotel(
                 resultSet.getLong("id"),
-                RoomClassEnum.valueOf(resultSet.getObject("class", String.class)),
-                resultSet.getBigDecimal("price_per_day")
+                resultSet.getString("name")
         );
     }
 }

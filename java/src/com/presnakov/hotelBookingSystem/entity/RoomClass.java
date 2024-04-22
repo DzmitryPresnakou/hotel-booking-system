@@ -1,15 +1,13 @@
-package com.presnakov.hotelBookingSystem.entity;
-
-import java.math.BigDecimal;
+package com.presnakov.hotelBookingSystem.entity;import java.math.BigDecimal;
 import java.util.Objects;
 
 public class RoomClass {
 
     private Long id;
-    private String comfortClass;
+    private RoomClassEnum comfortClass;
     private BigDecimal pricePerDay;
 
-    public RoomClass(Long id, String comfortClass, BigDecimal pricePerDay) {
+    public RoomClass(Long id, RoomClassEnum comfortClass, BigDecimal pricePerDay) {
         this.id = id;
         this.comfortClass = comfortClass;
         this.pricePerDay = pricePerDay;
@@ -26,11 +24,11 @@ public class RoomClass {
         this.id = id;
     }
 
-    public String getComfortClass() {
+    public RoomClassEnum getComfortClass() {
         return comfortClass;
     }
 
-    public void setComfortClass(String comfortClass) {
+    public void setComfortClass(RoomClassEnum comfortClass) {
         this.comfortClass = comfortClass;
     }
 
@@ -47,7 +45,7 @@ public class RoomClass {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoomClass roomClass = (RoomClass) o;
-        return Objects.equals(id, roomClass.id) && Objects.equals(comfortClass, roomClass.comfortClass) && Objects.equals(pricePerDay, roomClass.pricePerDay);
+        return Objects.equals(id, roomClass.id) && comfortClass == roomClass.comfortClass && Objects.equals(pricePerDay, roomClass.pricePerDay);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class RoomClass {
     public String toString() {
         return "RoomClass{" +
                "id=" + id +
-               ", comfortClass='" + comfortClass + '\'' +
+               ", comfortClass=" + comfortClass +
                ", pricePerDay=" + pricePerDay +
                '}';
     }
