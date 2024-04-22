@@ -20,6 +20,13 @@ public class UserDao implements Dao<Long, User> {
             DELETE FROM users
             WHERE id = ?
             """;
+
+    private static final String SOFT_DELETE_SQL = """
+            UPDATE users
+            SET is_active = FALSE
+            WHERE id = ?;
+            """;
+
     private static final String SAVE_SQL = """
             INSERT INTO users (first_name, last_name, email, password, user_role_id, is_active)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -65,6 +72,16 @@ public class UserDao implements Dao<Long, User> {
     public boolean delete(Long id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
+            prepareStatement.setLong(1, id);
+            return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", id), throwables);
+        }
+    }
+
+    public boolean softDelete(Long id) {
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(SOFT_DELETE_SQL)) {
             prepareStatement.setLong(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
