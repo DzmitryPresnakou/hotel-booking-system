@@ -1,13 +1,13 @@
 package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.entity.Room;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +32,8 @@ public class UserDao implements Dao<Long, User> {
                 password = ?,
                 user_role_id = ?,
                 is_active = ?
-             WHERE id = ?;
-             """;
+            WHERE id = ?;
+            """;
 
     private static final String FIND_ALL_SQL = """
             SELECT users.id,
@@ -63,17 +63,53 @@ public class UserDao implements Dao<Long, User> {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
+            prepareStatement.setLong(1, id);
+            return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", id), throwables);
+        }
     }
 
     @Override
     public User save(User user) {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setLong(5, user.getUserRole().getId());
+            preparedStatement.setBoolean(6, user.getActive());
+
+            preparedStatement.executeUpdate();
+            var generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getLong("id"));
+            }
+            return user;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", user.getId()), throwables.getCause());
+        }
     }
 
     @Override
     public void update(User user) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setLong(5, user.getUserRole().getId());
+            preparedStatement.setBoolean(6, user.getActive());
+            preparedStatement.setLong(7, user.getId());
 
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", user.getId()), throwables.getCause());
+        }
     }
 
     @Override

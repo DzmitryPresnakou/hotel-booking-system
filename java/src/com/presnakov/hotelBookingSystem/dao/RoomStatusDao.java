@@ -8,6 +8,7 @@ import com.presnakov.hotelBookingSystem.exception.DaoException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
             UPDATE room_status
             SET room_status = ?
             WHERE id = ?;
-             """;
+            """;
 
     public static final String FIND_ALL_SQL = """
             SELECT id,
@@ -49,17 +50,42 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
+            prepareStatement.setLong(1, id);
+            return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room status with id %s not found", id), throwables);
+        }
     }
 
     @Override
     public RoomStatus save(RoomStatus roomStatus) {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, String.valueOf(roomStatus.getRoomStatusEnum()));
+            preparedStatement.executeUpdate();
+
+            var generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                roomStatus.setId(generatedKeys.getLong("id"));
+            }
+            return roomStatus;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room status with id %s not found", roomStatus.getId()), throwables.getCause());
+        }
     }
 
     @Override
     public void update(RoomStatus roomStatus) {
-
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setString(1, String.valueOf(roomStatus.getRoomStatusEnum()));
+            preparedStatement.setLong(2, roomStatus.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room status with id %s not found", roomStatus.getId()), throwables.getCause());
+        }
     }
 
     @Override

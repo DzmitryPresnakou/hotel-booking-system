@@ -4,6 +4,7 @@ import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.entity.RoomOrder;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,6 +46,21 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
             check_out_date
             FROM room_order
             WHERE room_id = ?
+            """;
+
+    public static final String FIND_ALL_SQL = """
+            SELECT id,
+            user_id,
+            room_id,
+            order_status_id,
+            payment_status_id,
+            check_in_date,
+            check_out_date
+            FROM room_order
+            """;
+
+    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+            WHERE id = ?
             """;
 
     private RoomOrderDao() {
@@ -127,16 +143,57 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
 
     @Override
     public void update(RoomOrder roomOrder) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setLong(1, roomOrder.getUser().getId());
+            preparedStatement.setLong(2, roomOrder.getRoom().getId());
+            preparedStatement.setLong(3, roomOrder.getOrderStatus().getId());
+            preparedStatement.setLong(4, roomOrder.getPaymentStatus().getId());
+            preparedStatement.setObject(5, roomOrder.getCheckInDate());
+            preparedStatement.setObject(6, roomOrder.getCheckOutDate());
+            preparedStatement.setLong(7, roomOrder.getId());
 
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room order with id %s not found", roomOrder.getId()), throwables.getCause());
+        }
     }
 
     @Override
     public Optional<RoomOrder> findById(Long id) {
-        return Optional.empty();
+        try (var connection = ConnectionManager.get()) {
+            return findById(id, connection);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+        }
+    }
+
+    public Optional<RoomOrder> findById(Long id, Connection connection) {
+        try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+            preparedStatement.setLong(1, id);
+            var resultSet = preparedStatement.executeQuery();
+            RoomOrder roomOrder = null;
+            if (resultSet.next()) {
+                roomOrder = buildRoomOrder(resultSet);
+            }
+            return Optional.ofNullable(roomOrder);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Order with id %s not found", id), throwables);
+        }
     }
 
     @Override
     public List<RoomOrder> findAll() {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            var resultSet = preparedStatement.executeQuery();
+            List<RoomOrder> roomOrders = new ArrayList<>();
+            while (resultSet.next()) {
+                roomOrders.add(buildRoomOrder(resultSet));
+            }
+            return roomOrders;
+        } catch (SQLException throwables) {
+            throw new DaoException("Orders not found", throwables);
+        }
     }
 }

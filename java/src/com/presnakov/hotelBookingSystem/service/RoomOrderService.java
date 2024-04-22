@@ -20,8 +20,8 @@ public class RoomOrderService {
         return roomOrderDao.findAllByRoomId(roomId).stream()
                 .map(roomOrder -> new RoomOrderDto(
                         roomOrder.getId(),
-                        roomOrder.getRoomId(),
-                        roomOrder.getOrderStatusId()
+                        roomOrder.getRoom().getId(),
+                        roomOrder.getOrderStatus().getId()
                 ))
                 .collect(toList());
     }

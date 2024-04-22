@@ -8,6 +8,7 @@ import com.presnakov.hotelBookingSystem.exception.DaoException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,17 +50,42 @@ public class UserRoleDao implements Dao<Long, UserRole> {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        try (var connection = ConnectionManager.get();
+             var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
+            prepareStatement.setLong(1, id);
+            return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Role with id %s not found", id), throwables);
+        }
     }
 
     @Override
     public UserRole save(UserRole userRole) {
-        return null;
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, String.valueOf(userRole.getUserRoleEnum()));
+            preparedStatement.executeUpdate();
+
+            var generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                userRole.setId(generatedKeys.getLong("id"));
+            }
+            return userRole;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Role with id %s not found", userRole.getId()), throwables.getCause());
+        }
     }
 
     @Override
     public void update(UserRole userRole) {
-
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
+            preparedStatement.setString(1, String.valueOf(userRole.getUserRoleEnum()));
+            preparedStatement.setLong(2, userRole.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Role status with id %s not found", userRole.getId()), throwables.getCause());
+        }
     }
 
     @Override
@@ -67,7 +93,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("User Role with id %s not found", id), throwables);
+            throw new DaoException(String.format("Role with id %s not found", id), throwables);
         }
     }
 

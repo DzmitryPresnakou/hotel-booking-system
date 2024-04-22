@@ -3,8 +3,6 @@ package com.presnakov.hotelBookingSystem.dao;
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.entity.PaymentStatus;
 import com.presnakov.hotelBookingSystem.entity.PaymentStatusEnum;
-import com.presnakov.hotelBookingSystem.entity.RoomStatus;
-import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;

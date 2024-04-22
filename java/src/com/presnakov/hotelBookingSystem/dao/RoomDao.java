@@ -3,7 +3,6 @@ package com.presnakov.hotelBookingSystem.dao;
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.dto.RoomFilter;
 import com.presnakov.hotelBookingSystem.entity.Room;
-import com.presnakov.hotelBookingSystem.entity.UserRole;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
