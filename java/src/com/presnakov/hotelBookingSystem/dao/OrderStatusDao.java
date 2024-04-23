@@ -15,8 +15,7 @@ import java.util.Optional;
 
 public class OrderStatusDao implements Dao<Long, OrderStatus> {
 
-
-    public static final OrderStatusDao INSTANCE = new OrderStatusDao();
+    private static final OrderStatusDao INSTANCE = new OrderStatusDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM order_status
@@ -31,16 +30,16 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
             SET order_status = ?
             WHERE id = ?;
              """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             order_status,
             FROM order_status
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String ORDER_STATUS = "order_status";
 
     private OrderStatusDao() {
     }
@@ -69,7 +68,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                orderStatus.setId(generatedKeys.getLong("id"));
+                orderStatus.setId(generatedKeys.getLong(ID));
             }
             return orderStatus;
         } catch (SQLException throwables) {
@@ -129,8 +128,8 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
 
     private OrderStatus buildOrderStatus(ResultSet resultSet) throws SQLException {
         return new OrderStatus(
-                resultSet.getLong("id"),
-                OrderStatusEnum.valueOf(resultSet.getObject("order_status", String.class))
+                resultSet.getLong(ID),
+                OrderStatusEnum.valueOf(resultSet.getObject(ORDER_STATUS, String.class))
         );
     }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class HotelDao implements Dao<Long, Hotel> {
 
-    public static final HotelDao INSTANCE = new HotelDao();
+    private static final HotelDao INSTANCE = new HotelDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM hotel
@@ -29,16 +29,16 @@ public class HotelDao implements Dao<Long, Hotel> {
             SET name = ?
              WHERE id = ?;
              """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             name
             FROM hotel
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String NAME = "name";
 
     private HotelDao() {
     }
@@ -67,7 +67,7 @@ public class HotelDao implements Dao<Long, Hotel> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                hotel.setId(generatedKeys.getLong("id"));
+                hotel.setId(generatedKeys.getLong(ID));
             }
             return hotel;
         } catch (SQLException throwables) {
@@ -127,8 +127,8 @@ public class HotelDao implements Dao<Long, Hotel> {
 
     private Hotel buildHotel(ResultSet resultSet) throws SQLException {
         return new Hotel(
-                resultSet.getLong("id"),
-                resultSet.getString("name")
+                resultSet.getLong(ID),
+                resultSet.getString(NAME)
         );
     }
 }

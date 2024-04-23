@@ -15,8 +15,7 @@ import java.util.Optional;
 
 public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
-
-    public static final PaymentStatusDao INSTANCE = new PaymentStatusDao();
+    private static final PaymentStatusDao INSTANCE = new PaymentStatusDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM payment_status
@@ -31,16 +30,16 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
             SET payment_status = ?
              WHERE id = ?;
              """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             payment_status,
             FROM payment_status
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String PAYMENT_STATUS = "payment_status";
 
     private PaymentStatusDao() {
     }
@@ -69,7 +68,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                paymentStatus.setId(generatedKeys.getLong("id"));
+                paymentStatus.setId(generatedKeys.getLong(ID));
             }
             return paymentStatus;
         } catch (SQLException throwables) {
@@ -129,8 +128,8 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
     private PaymentStatus buildPaymentStatus(ResultSet resultSet) throws SQLException {
         return new PaymentStatus(
-                resultSet.getLong("id"),
-                PaymentStatusEnum.valueOf(resultSet.getObject("payment_status", String.class))
+                resultSet.getLong(ID),
+                PaymentStatusEnum.valueOf(resultSet.getObject(PAYMENT_STATUS, String.class))
         );
     }
 }

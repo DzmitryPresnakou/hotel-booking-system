@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class RoomClassDao implements Dao<Long, RoomClass> {
 
-    public static final RoomClassDao INSTANCE = new RoomClassDao();
+    private static final RoomClassDao INSTANCE = new RoomClassDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM room_class
@@ -30,17 +30,17 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
                 price_per_day = ?
              WHERE id = ?;
              """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             class,
             price_per_day
             FROM room_class
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String PRICE_PER_DAY = "price_per_day";
 
     private RoomClassDao() {
     }
@@ -70,7 +70,7 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomClass.setId(generatedKeys.getLong("id"));
+                roomClass.setId(generatedKeys.getLong(ID));
             }
             return roomClass;
         } catch (SQLException throwables) {
@@ -130,9 +130,9 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
 
     private RoomClass buildRoomClasses(ResultSet resultSet) throws SQLException {
         return new RoomClass(
-                resultSet.getLong("id"),
+                resultSet.getLong(ID),
                 RoomClassEnum.valueOf(resultSet.getObject("class", String.class)),
-                resultSet.getBigDecimal("price_per_day")
+                resultSet.getBigDecimal(PRICE_PER_DAY)
         );
     }
 }

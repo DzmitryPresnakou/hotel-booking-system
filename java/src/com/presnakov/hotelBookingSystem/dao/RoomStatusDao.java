@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
-    public static final RoomStatusDao INSTANCE = new RoomStatusDao();
+    private static final RoomStatusDao INSTANCE = new RoomStatusDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM room_status
@@ -30,16 +30,16 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
             SET room_status = ?
             WHERE id = ?;
             """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             room_status,
             FROM room_status
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String ROOM_STATUS = "room_status";
 
     private RoomStatusDao() {
     }
@@ -68,7 +68,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomStatus.setId(generatedKeys.getLong("id"));
+                roomStatus.setId(generatedKeys.getLong(ID));
             }
             return roomStatus;
         } catch (SQLException throwables) {
@@ -128,8 +128,8 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
     private RoomStatus buildRoomStatus(ResultSet resultSet) throws SQLException {
         return new RoomStatus(
-                resultSet.getLong("id"),
-                RoomStatusEnum.valueOf(resultSet.getObject("room_status", String.class))
+                resultSet.getLong(ID),
+                RoomStatusEnum.valueOf(resultSet.getObject(ROOM_STATUS, String.class))
         );
     }
 }

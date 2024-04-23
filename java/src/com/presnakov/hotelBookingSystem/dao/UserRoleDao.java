@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class UserRoleDao implements Dao<Long, UserRole> {
 
-    public static final UserRoleDao INSTANCE = new UserRoleDao();
+    private static final UserRoleDao INSTANCE = new UserRoleDao();
 
     private static final String DELETE_SQL = """
             DELETE FROM user_role
@@ -30,16 +30,16 @@ public class UserRoleDao implements Dao<Long, UserRole> {
             SET role = ?
             WHERE id = ?;
             """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             role,
             FROM user_role
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String ROLE = "role";
 
     private UserRoleDao() {
     }
@@ -68,7 +68,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                userRole.setId(generatedKeys.getLong("id"));
+                userRole.setId(generatedKeys.getLong(ID));
             }
             return userRole;
         } catch (SQLException throwables) {
@@ -128,8 +128,8 @@ public class UserRoleDao implements Dao<Long, UserRole> {
 
     private UserRole buildUserRole(ResultSet resultSet) throws SQLException {
         return new UserRole(
-                resultSet.getLong("id"),
-                UserRoleEnum.valueOf(resultSet.getObject("role", String.class))
+                resultSet.getLong(ID),
+                UserRoleEnum.valueOf(resultSet.getObject(ROLE, String.class))
         );
     }
 }

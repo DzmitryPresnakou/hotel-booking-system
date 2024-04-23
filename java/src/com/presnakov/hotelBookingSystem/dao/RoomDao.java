@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.joining;
 public class RoomDao implements Dao<Long, Room> {
 
     private static final RoomDao INSTANCE = new RoomDao();
+
     private static final String DELETE_SQL = """
             DELETE FROM room
             WHERE id = ?
@@ -34,7 +35,6 @@ public class RoomDao implements Dao<Long, Room> {
                 hotel_id = ?
              WHERE id = ?;
              """;
-
     private static final String FIND_ALL_SQL = """
             SELECT room.id,
                    room_occupancy,
@@ -47,10 +47,14 @@ public class RoomDao implements Dao<Long, Room> {
             JOIN public.room_class rc
                 ON room_class_id = rc.id
             """;
-
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE room.id = ?
             """;
+    private static final String ID = "id";
+    private static final String ROOM_OCCUPANCY = "room_occupancy";
+    private static final String ROOM_CLASS_ID = "room_class_id";
+    private static final String ROOM_STATUS_ID = "room_status_id";
+    private static final String HOTEL_ID = "hotel_id";
 
     private final RoomClassDao roomClassDao = RoomClassDao.getInstance();
     private final RoomStatusDao roomStatusDao = RoomStatusDao.getInstance();
@@ -142,16 +146,15 @@ public class RoomDao implements Dao<Long, Room> {
         }
     }
 
-
     private Room buildRoom(ResultSet resultSet) throws SQLException {
         return new Room(
-                resultSet.getLong("id"),
-                resultSet.getLong("room_occupancy"),
-                roomClassDao.findById(resultSet.getLong("room_class_id"),
+                resultSet.getLong(ID),
+                resultSet.getLong(ROOM_OCCUPANCY),
+                roomClassDao.findById(resultSet.getLong(ROOM_CLASS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                roomStatusDao.findById(resultSet.getLong("room_status_id"),
+                roomStatusDao.findById(resultSet.getLong(ROOM_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                hotelDao.findById(resultSet.getLong("hotel_id"),
+                hotelDao.findById(resultSet.getLong(HOTEL_ID),
                         resultSet.getStatement().getConnection()).orElse(null)
         );
     }
@@ -183,7 +186,7 @@ public class RoomDao implements Dao<Long, Room> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                room.setId(generatedKeys.getLong("id"));
+                room.setId(generatedKeys.getLong(ID));
             }
             return room;
         } catch (SQLException throwables) {

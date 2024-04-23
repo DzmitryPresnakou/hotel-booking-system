@@ -20,13 +20,11 @@ public class UserDao implements Dao<Long, User> {
             DELETE FROM users
             WHERE id = ?
             """;
-
     private static final String SOFT_DELETE_SQL = """
             UPDATE users
             SET is_active = FALSE
             WHERE id = ?;
             """;
-
     private static final String SAVE_SQL = """
             INSERT INTO users (first_name, last_name, email, password, user_role_id, is_active)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -41,7 +39,6 @@ public class UserDao implements Dao<Long, User> {
                 is_active = ?
             WHERE id = ?;
             """;
-
     private static final String FIND_ALL_SQL = """
             SELECT users.id,
                    first_name,
@@ -54,10 +51,16 @@ public class UserDao implements Dao<Long, User> {
             JOIN public.user_role ur
                 ON user_role_id = ur.id
             """;
-
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE users.id = ?
             """;
+    private static final String ID = "id";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String USER_ROLE_ID = "user_role_id";
+    private static final String IS_ACTIVE = "is_active";
 
     private final UserRoleDao userRoleDao = UserRoleDao.getInstance();
 
@@ -103,7 +106,7 @@ public class UserDao implements Dao<Long, User> {
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                user.setId(generatedKeys.getLong("id"));
+                user.setId(generatedKeys.getLong(ID));
             }
             return user;
         } catch (SQLException throwables) {
@@ -154,14 +157,14 @@ public class UserDao implements Dao<Long, User> {
 
     private User buildUser(ResultSet resultSet) throws SQLException {
         return new User(
-                resultSet.getLong("id"),
-                resultSet.getString("first_name"),
-                resultSet.getString("last_name"),
-                resultSet.getString("email"),
-                resultSet.getString("password"),
-                userRoleDao.findById(resultSet.getLong("user_role_id"),
+                resultSet.getLong(ID),
+                resultSet.getString(FIRST_NAME),
+                resultSet.getString(LAST_NAME),
+                resultSet.getString(EMAIL),
+                resultSet.getString(PASSWORD),
+                userRoleDao.findById(resultSet.getLong(USER_ROLE_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getBoolean("is_active")
+                resultSet.getBoolean(IS_ACTIVE)
         );
     }
 

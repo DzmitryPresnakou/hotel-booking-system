@@ -35,7 +35,6 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
                 check_out_date = ?
              WHERE id = ?;
              """;
-
     private static final String FIND_ALL_BY_ROOM_ID = """
             SELECT id,
             user_id,
@@ -47,8 +46,7 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
             FROM room_order
             WHERE room_id = ?
             """;
-
-    public static final String FIND_ALL_SQL = """
+    private static final String FIND_ALL_SQL = """
             SELECT id,
             user_id,
             room_id,
@@ -58,10 +56,16 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
             check_out_date
             FROM room_order
             """;
-
-    public static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
+    private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String ID = "id";
+    private static final String USER_ID = "user_id";
+    private static final String ROOM_ID = "room_id";
+    private static final String ORDER_STATUS_ID = "order_status_id";
+    private static final String PAYMENT_STATUS_ID = "payment_status_id";
+    private static final String CHECK_IN_DATE = "check_in_date";
+    private static final String CHECK_OUT_DATE = "check_out_date";
 
     private RoomOrderDao() {
     }
@@ -85,7 +89,6 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
             while (resultSet.next()) {
                 roomOrders.add(buildRoomOrder(resultSet));
             }
-
             return roomOrders;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -94,17 +97,17 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
 
     private RoomOrder buildRoomOrder(ResultSet resultSet) throws SQLException {
         return new RoomOrder(
-                resultSet.getLong("id"),
-                userDao.findById(resultSet.getLong("user_id"),
+                resultSet.getLong(ID),
+                userDao.findById(resultSet.getLong(USER_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                roomDao.findById(resultSet.getLong("room_id"),
+                roomDao.findById(resultSet.getLong(ROOM_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                orderStatusDao.findById(resultSet.getLong("order_status_id"),
+                orderStatusDao.findById(resultSet.getLong(ORDER_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                paymentStatusDao.findById(resultSet.getLong("payment_status_id"),
+                paymentStatusDao.findById(resultSet.getLong(PAYMENT_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getObject("check_in_date", LocalDateTime.class),
-                resultSet.getObject("check_out_date", LocalDateTime.class)
+                resultSet.getObject(CHECK_IN_DATE, LocalDateTime.class),
+                resultSet.getObject(CHECK_OUT_DATE, LocalDateTime.class)
         );
     }
 
@@ -133,7 +136,7 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomOrder.setId(generatedKeys.getLong("id"));
+                roomOrder.setId(generatedKeys.getLong(ID));
             }
             return roomOrder;
         } catch (SQLException throwables) {
