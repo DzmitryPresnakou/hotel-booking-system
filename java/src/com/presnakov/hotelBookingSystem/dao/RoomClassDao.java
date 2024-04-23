@@ -41,6 +41,7 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             """;
     private static final String ID = "id";
     private static final String PRICE_PER_DAY = "price_per_day";
+    private static final String CLASS = "class";
 
     private RoomClassDao() {
     }
@@ -105,7 +106,7 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             var resultSet = preparedStatement.executeQuery();
             RoomClass roomClass = null;
             if (resultSet.next()) {
-                roomClass = buildRoomClasses(resultSet);
+                roomClass = buildRoomClass(resultSet);
             }
             return Optional.ofNullable(roomClass);
         } catch (SQLException throwables) {
@@ -120,18 +121,18 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             var resultSet = preparedStatement.executeQuery();
             List<RoomClass> roomClasses = new ArrayList<>();
             while (resultSet.next()) {
-                roomClasses.add(buildRoomClasses(resultSet));
+                roomClasses.add(buildRoomClass(resultSet));
             }
             return roomClasses;
         } catch (SQLException throwables) {
-            throw new DaoException("Room classes not found", throwables);
+            throw new DaoException("Room class not found", throwables);
         }
     }
 
-    private RoomClass buildRoomClasses(ResultSet resultSet) throws SQLException {
+    private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
         return new RoomClass(
                 resultSet.getLong(ID),
-                RoomClassEnum.valueOf(resultSet.getObject("class", String.class)),
+                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)),
                 resultSet.getBigDecimal(PRICE_PER_DAY)
         );
     }

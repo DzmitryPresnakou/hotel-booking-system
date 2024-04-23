@@ -22,8 +22,8 @@ public class RoomService {
                         room.getId(),
                         """
                                 %s - %s - %s - %s
-                                 """.formatted(room.getRoomOccupancy(), room.getRoomClass().getId(),
-                                room.getRoomStatus().getId(), room.getHotel().getId())
+                                 """.formatted(room.getRoomOccupancy(), room.getRoomClass().getComfortClass(),
+                                room.getRoomStatus().getRoomStatusEnum(), room.getHotel().getName())
                 ))
                 .collect(toList());
     }

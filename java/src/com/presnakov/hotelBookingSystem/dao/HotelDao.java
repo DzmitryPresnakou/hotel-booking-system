@@ -27,7 +27,7 @@ public class HotelDao implements Dao<Long, Hotel> {
     private static final String UPDATE_SQL = """
             UPDATE hotel
             SET name = ?
-             WHERE id = ?;
+            WHERE id = ?;
              """;
     private static final String FIND_ALL_SQL = """
             SELECT id,

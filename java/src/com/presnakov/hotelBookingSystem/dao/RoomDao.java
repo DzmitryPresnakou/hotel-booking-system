@@ -44,7 +44,7 @@ public class RoomDao implements Dao<Long, Room> {
                    rc.class,
                    rc.price_per_day
             FROM room
-            JOIN public.room_class rc
+            JOIN room_class rc
                 ON room_class_id = rc.id
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
