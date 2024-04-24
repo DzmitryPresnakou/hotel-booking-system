@@ -32,7 +32,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
              """;
     private static final String FIND_ALL_SQL = """
             SELECT id,
-            order_status,
+            order_status
             FROM order_status
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """

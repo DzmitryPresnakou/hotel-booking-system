@@ -21,7 +21,7 @@ public class RoomService {
                 .map(room -> new RoomDto(
                         room.getId(),
                         """
-                                %s - %s - %s - %s
+                                beds: %s - class: %s - status: %s - hotel: %s
                                  """.formatted(room.getRoomOccupancy(), room.getRoomClass().getComfortClass(),
                                 room.getRoomStatus().getRoomStatusEnum(), room.getHotel().getName())
                 ))

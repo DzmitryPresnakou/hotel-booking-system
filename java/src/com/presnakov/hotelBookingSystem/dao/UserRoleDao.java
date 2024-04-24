@@ -32,7 +32,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
             """;
     private static final String FIND_ALL_SQL = """
             SELECT id,
-            role,
+            role
             FROM user_role
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """

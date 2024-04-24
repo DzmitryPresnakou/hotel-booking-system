@@ -33,5 +33,4 @@ public class RoomServlet extends HttpServlet {
             printWriter.write("</ul>");
         }
     }
-
 }
