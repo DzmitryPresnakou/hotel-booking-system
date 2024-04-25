@@ -7,15 +7,15 @@ public class Room {
     private Long id;
     private Long roomOccupancy;
     private RoomClass roomClass;
-    private Long roomStatusId;
-    private Long hotelId;
+    private RoomStatus roomStatus;
+    private Hotel hotel;
 
-    public Room(Long id, Long roomOccupancy, RoomClass roomClass, Long roomStatusId, Long hotelId) {
+    public Room(Long id, Long roomOccupancy, RoomClass roomClass, RoomStatus roomStatus, Hotel hotel) {
         this.id = id;
         this.roomOccupancy = roomOccupancy;
         this.roomClass = roomClass;
-        this.roomStatusId = roomStatusId;
-        this.hotelId = hotelId;
+        this.roomStatus = roomStatus;
+        this.hotel = hotel;
     }
 
     public Room() {
@@ -45,20 +45,20 @@ public class Room {
         this.roomClass = roomClass;
     }
 
-    public Long getRoomStatusId() {
-        return roomStatusId;
+    public RoomStatus getRoomStatus() {
+        return roomStatus;
     }
 
-    public void setRoomStatusId(Long roomStatusId) {
-        this.roomStatusId = roomStatusId;
+    public void setRoomStatus(RoomStatus roomStatus) {
+        this.roomStatus = roomStatus;
     }
 
-    public Long getHotelId() {
-        return hotelId;
+    public Hotel getHotel() {
+        return hotel;
     }
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
+    public void setHotel(Hotel hotel) {
+        this.hotel = hotel;
     }
 
     @Override
@@ -66,12 +66,12 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return Objects.equals(id, room.id) && Objects.equals(roomOccupancy, room.roomOccupancy) && Objects.equals(roomClass, room.roomClass) && Objects.equals(roomStatusId, room.roomStatusId) && Objects.equals(hotelId, room.hotelId);
+        return Objects.equals(id, room.id) && Objects.equals(roomOccupancy, room.roomOccupancy) && Objects.equals(roomClass, room.roomClass) && Objects.equals(roomStatus, room.roomStatus) && Objects.equals(hotel, room.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roomOccupancy, roomClass, roomStatusId, hotelId);
+        return Objects.hash(id, roomOccupancy, roomClass, roomStatus, hotel);
     }
 
     @Override
@@ -80,8 +80,8 @@ public class Room {
                "id=" + id +
                ", roomOccupancy=" + roomOccupancy +
                ", roomClass=" + roomClass +
-               ", roomStatusId=" + roomStatusId +
-               ", hotelId=" + hotelId +
+               ", roomStatus=" + roomStatus +
+               ", hotel=" + hotel +
                '}';
     }
 }

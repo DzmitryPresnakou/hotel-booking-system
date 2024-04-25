@@ -1,7 +1,8 @@
 package com.presnakov.hotelBookingSystem.dao;
+
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.entity.RoomClass;
-import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
+import com.presnakov.hotelBookingSystem.entity.UserRole;
+import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
@@ -12,41 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomClassDao implements Dao<Long, RoomClass> {
+public class UserRoleDao implements Dao<Long, UserRole> {
 
-    private static final RoomClassDao INSTANCE = new RoomClassDao();
+    private static final UserRoleDao INSTANCE = new UserRoleDao();
 
     private static final String DELETE_SQL = """
-            DELETE FROM room_class
+            DELETE FROM user_role
             WHERE id = ?
             """;
     private static final String SAVE_SQL = """
-            INSERT INTO room_class (class, price_per_day)
-            VALUES (?, ?);
+            INSERT INTO user_role (role)
+            VALUES (?);
             """;
     private static final String UPDATE_SQL = """
-            UPDATE room_class
-            SET class = ?,
-                price_per_day = ?
-             WHERE id = ?;
-             """;
+            UPDATE user_role
+            SET role = ?
+            WHERE id = ?;
+            """;
     private static final String FIND_ALL_SQL = """
             SELECT id,
-            class,
-            price_per_day
-            FROM room_class
+            role
+            FROM user_role
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
     private static final String ID = "id";
-    private static final String PRICE_PER_DAY = "price_per_day";
-    private static final String CLASS = "class";
+    private static final String ROLE = "role";
 
-    private RoomClassDao() {
+    private UserRoleDao() {
     }
 
-    public static RoomClassDao getInstance() {
+    public static UserRoleDao getInstance() {
         return INSTANCE;
     }
 
@@ -57,83 +55,81 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
             prepareStatement.setLong(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Role with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public RoomClass save(RoomClass roomClass) {
+    public UserRole save(UserRole userRole) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setBigDecimal(2, roomClass.getPricePerDay());
+            preparedStatement.setString(1, String.valueOf(userRole.getUserRoleEnum()));
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomClass.setId(generatedKeys.getLong(ID));
+                userRole.setId(generatedKeys.getLong(ID));
             }
-            return roomClass;
+            return userRole;
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Role with id %s not found", userRole.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public void update(RoomClass roomClass) {
+    public void update(UserRole userRole) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setLong(2, roomClass.getId());
+            preparedStatement.setString(1, String.valueOf(userRole.getUserRoleEnum()));
+            preparedStatement.setLong(2, userRole.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room class with id %s not found", roomClass.getId()), throwables.getCause());
+            throw new DaoException(String.format("Role status with id %s not found", userRole.getId()), throwables.getCause());
         }
     }
 
     @Override
-    public Optional<RoomClass> findById(Long id) {
+    public Optional<UserRole> findById(Long id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Role with id %s not found", id), throwables);
         }
     }
 
-    public Optional<RoomClass> findById(Long id, Connection connection) {
+    public Optional<UserRole> findById(Long id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
             var resultSet = preparedStatement.executeQuery();
-            RoomClass roomClass = null;
+            UserRole userRole = null;
             if (resultSet.next()) {
-                roomClass = buildRoomClass(resultSet);
+                userRole = buildUserRole(resultSet);
             }
-            return Optional.ofNullable(roomClass);
+            return Optional.ofNullable(userRole);
         } catch (SQLException throwables) {
-            throw new DaoException(String.format("Room Class with id %s not found", id), throwables);
+            throw new DaoException(String.format("Role with id %s not found", id), throwables);
         }
     }
 
     @Override
-    public List<RoomClass> findAll() {
+    public List<UserRole> findAll() {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
             var resultSet = preparedStatement.executeQuery();
-            List<RoomClass> roomClasses = new ArrayList<>();
+            List<UserRole> userRoles = new ArrayList<>();
             while (resultSet.next()) {
-                roomClasses.add(buildRoomClass(resultSet));
+                userRoles.add(buildUserRole(resultSet));
             }
-            return roomClasses;
+            return userRoles;
         } catch (SQLException throwables) {
-            throw new DaoException("Room class not found", throwables);
+            throw new DaoException("Roles not found", throwables);
         }
     }
 
-    private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
-        return new RoomClass(
+    private UserRole buildUserRole(ResultSet resultSet) throws SQLException {
+        return new UserRole(
                 resultSet.getLong(ID),
-                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)),
-                resultSet.getBigDecimal(PRICE_PER_DAY)
+                UserRoleEnum.valueOf(resultSet.getObject(ROLE, String.class))
         );
     }
 }
