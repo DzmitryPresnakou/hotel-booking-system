@@ -129,7 +129,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
     private OrderStatus buildOrderStatus(ResultSet resultSet) throws SQLException {
         return new OrderStatus(
                 resultSet.getLong(ID),
-                OrderStatusEnum.valueOf(resultSet.getObject(ORDER_STATUS, String.class))
+                OrderStatusEnum.valueOf(resultSet.getObject(ORDER_STATUS, String.class).toUpperCase())
         );
     }
 }

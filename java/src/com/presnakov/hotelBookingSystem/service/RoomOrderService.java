@@ -18,11 +18,10 @@ public class RoomOrderService {
 
     public List<RoomOrderDto> findAllByRoomId(Long roomId) {
         return roomOrderDao.findAllByRoomId(roomId).stream()
-                .map(roomOrder -> new RoomOrderDto(
-                        roomOrder.getId(),
-                        roomOrder.getRoom().getId(),
-                        roomOrder.getOrderStatus().getId()
-                ))
+                .map(roomOrder -> RoomOrderDto.builder().id(roomOrder.getId())
+                        .roomId(roomOrder.getId())
+                        .orderStatusId(roomOrder.getOrderStatus().getId())
+                        .build())
                 .collect(toList());
     }
 

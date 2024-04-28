@@ -129,7 +129,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
     private UserRole buildUserRole(ResultSet resultSet) throws SQLException {
         return new UserRole(
                 resultSet.getLong(ID),
-                UserRoleEnum.valueOf(resultSet.getObject(ROLE, String.class))
+                UserRoleEnum.valueOf(resultSet.getObject(ROLE, String.class).toUpperCase())
         );
     }
 }

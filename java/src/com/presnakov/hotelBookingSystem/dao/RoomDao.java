@@ -43,24 +43,6 @@ public class RoomDao implements Dao<Long, Room> {
                    hotel_id
             FROM room
             """;
-//    private static final String FIND_ALL_SQL = """
-//            SELECT room.id,
-//                   room_occupancy,
-//                   room_class_id,
-//                   room_status_id,
-//                   hotel_id,
-//                   rc.class,
-//                   rc.price_per_day,
-//                   rs.room_status,
-//                   h.name
-//            FROM room
-//            JOIN public.room_class rc
-//                ON room_class_id = rc.id
-//            JOIN public.room_status rs
-//                ON room_status_id = rs.id
-//            JOIN public.hotel h
-//                ON hotel_id = h.id
-//            """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE room.id = ?
             """;

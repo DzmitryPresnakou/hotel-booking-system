@@ -129,7 +129,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
     private RoomStatus buildRoomStatus(ResultSet resultSet) throws SQLException {
         return new RoomStatus(
                 resultSet.getLong(ID),
-                RoomStatusEnum.valueOf(resultSet.getObject(ROOM_STATUS, String.class))
+                RoomStatusEnum.valueOf(resultSet.getObject(ROOM_STATUS, String.class).toUpperCase())
         );
     }
 }

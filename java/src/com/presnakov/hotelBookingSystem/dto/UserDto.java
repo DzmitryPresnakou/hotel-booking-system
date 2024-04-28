@@ -5,9 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class RoomOrderDto {
-
+public class UserDto {
     Long id;
-    Long roomId;
-    Long orderStatusId;
+    String mail;
 }
