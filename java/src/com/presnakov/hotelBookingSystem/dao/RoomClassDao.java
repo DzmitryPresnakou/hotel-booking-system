@@ -132,7 +132,7 @@ public class RoomClassDao implements Dao<Long, RoomClass> {
     private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
         return new RoomClass(
                 resultSet.getLong(ID),
-                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)),
+                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class).toUpperCase()),
                 resultSet.getBigDecimal(PRICE_PER_DAY)
         );
     }

@@ -10,9 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.stream.Stream;
 
 @WebServlet("/first")
 public class FirstServlet extends HttpServlet {
@@ -40,18 +38,5 @@ public class FirstServlet extends HttpServlet {
             });
             writer.write("</ul>");
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try (BufferedReader reader = request.getReader();
-             Stream<String> lines = reader.lines()) {
-            lines.forEach(System.out::println);
-        }
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
     }
 }

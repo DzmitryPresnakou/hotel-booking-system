@@ -129,7 +129,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
     private PaymentStatus buildPaymentStatus(ResultSet resultSet) throws SQLException {
         return new PaymentStatus(
                 resultSet.getLong(ID),
-                PaymentStatusEnum.valueOf(resultSet.getObject(PAYMENT_STATUS, String.class))
+                PaymentStatusEnum.valueOf(resultSet.getObject(PAYMENT_STATUS, String.class).toUpperCase())
         );
     }
 }
