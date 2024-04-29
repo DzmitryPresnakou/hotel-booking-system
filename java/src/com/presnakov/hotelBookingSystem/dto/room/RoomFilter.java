@@ -1,4 +1,4 @@
-package com.presnakov.hotelBookingSystem.dto;
+package com.presnakov.hotelBookingSystem.dto.room;
 
 public record RoomFilter(int limit,
                          int offset,

@@ -1,7 +1,7 @@
 package com.presnakov.hotelBookingSystem.servlet;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
-import com.presnakov.hotelBookingSystem.dto.RoomDto;
+import com.presnakov.hotelBookingSystem.dto.room.RoomDto;
 import com.presnakov.hotelBookingSystem.service.RoomService;
 
 import javax.servlet.ServletException;

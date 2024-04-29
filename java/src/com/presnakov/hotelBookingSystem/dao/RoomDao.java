@@ -1,7 +1,7 @@
 package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.dto.RoomFilter;
+import com.presnakov.hotelBookingSystem.dto.room.RoomFilter;
 import com.presnakov.hotelBookingSystem.entity.Room;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 
-public class RoomDao implements Dao<Long, Room> {
+public class RoomDao implements Dao<Integer, Room> {
 
     private static final RoomDao INSTANCE = new RoomDao();
 
@@ -120,7 +120,7 @@ public class RoomDao implements Dao<Long, Room> {
     }
 
     @Override
-    public Optional<Room> findById(Long id) {
+    public Optional<Room> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -128,9 +128,9 @@ public class RoomDao implements Dao<Long, Room> {
         }
     }
 
-    public Optional<Room> findById(Long id, Connection connection) {
+    public Optional<Room> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             Room room = null;
             if (resultSet.next()) {
@@ -144,13 +144,13 @@ public class RoomDao implements Dao<Long, Room> {
 
     private Room buildRoom(ResultSet resultSet) throws SQLException {
         return new Room(
-                resultSet.getLong(ID),
-                resultSet.getLong(ROOM_OCCUPANCY),
-                roomClassDao.findById(resultSet.getLong(ROOM_CLASS_ID),
+                resultSet.getInt(ID),
+                resultSet.getInt(ROOM_OCCUPANCY),
+                roomClassDao.findById(resultSet.getInt(ROOM_CLASS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                roomStatusDao.findById(resultSet.getLong(ROOM_STATUS_ID),
+                roomStatusDao.findById(resultSet.getInt(ROOM_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                hotelDao.findById(resultSet.getLong(HOTEL_ID),
+                hotelDao.findById(resultSet.getInt(HOTEL_ID),
                         resultSet.getStatement().getConnection()).orElse(null)
         );
     }
@@ -158,11 +158,11 @@ public class RoomDao implements Dao<Long, Room> {
     public void update(Room room) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setLong(1, room.getRoomOccupancy());
-            preparedStatement.setLong(2, room.getRoomClass().getId());
-            preparedStatement.setLong(3, room.getRoomStatus().getId());
-            preparedStatement.setLong(4, room.getHotel().getId());
-            preparedStatement.setLong(5, room.getId());
+            preparedStatement.setInt(1, room.getRoomOccupancy());
+            preparedStatement.setInt(2, room.getRoomClass().getId());
+            preparedStatement.setInt(3, room.getRoomStatus().getId());
+            preparedStatement.setInt(4, room.getHotel().getId());
+            preparedStatement.setInt(5, room.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -173,16 +173,16 @@ public class RoomDao implements Dao<Long, Room> {
     public Room save(Room room) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, room.getRoomOccupancy());
-            preparedStatement.setLong(2, room.getRoomClass().getId());
-            preparedStatement.setLong(3, room.getRoomStatus().getId());
-            preparedStatement.setLong(4, room.getHotel().getId());
+            preparedStatement.setInt(1, room.getRoomOccupancy());
+            preparedStatement.setInt(2, room.getRoomClass().getId());
+            preparedStatement.setInt(3, room.getRoomStatus().getId());
+            preparedStatement.setInt(4, room.getHotel().getId());
 
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                room.setId(generatedKeys.getLong(ID));
+                room.setId(generatedKeys.getInt(ID));
             }
             return room;
         } catch (SQLException throwables) {
@@ -190,10 +190,10 @@ public class RoomDao implements Dao<Long, Room> {
         }
     }
 
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
 
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomStatusDao implements Dao<Long, RoomStatus> {
+public class RoomStatusDao implements Dao<Integer, RoomStatus> {
 
     private static final RoomStatusDao INSTANCE = new RoomStatusDao();
 
@@ -49,10 +49,10 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room status with id %s not found", id), throwables);
@@ -68,7 +68,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomStatus.setId(generatedKeys.getLong(ID));
+                roomStatus.setId(generatedKeys.getInt(ID));
             }
             return roomStatus;
         } catch (SQLException throwables) {
@@ -81,7 +81,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, String.valueOf(roomStatus.getRoomStatusEnum()));
-            preparedStatement.setLong(2, roomStatus.getId());
+            preparedStatement.setInt(2, roomStatus.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room status with id %s not found", roomStatus.getId()), throwables.getCause());
@@ -89,7 +89,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
     }
 
     @Override
-    public Optional<RoomStatus> findById(Long id) {
+    public Optional<RoomStatus> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -97,9 +97,9 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
         }
     }
 
-    public Optional<RoomStatus> findById(Long id, Connection connection) {
+    public Optional<RoomStatus> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             RoomStatus roomStatus = null;
             if (resultSet.next()) {
@@ -128,7 +128,7 @@ public class RoomStatusDao implements Dao<Long, RoomStatus> {
 
     private RoomStatus buildRoomStatus(ResultSet resultSet) throws SQLException {
         return new RoomStatus(
-                resultSet.getLong(ID),
+                resultSet.getInt(ID),
                 RoomStatusEnum.valueOf(resultSet.getObject(ROOM_STATUS, String.class).toUpperCase())
         );
     }

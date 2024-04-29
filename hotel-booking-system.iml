@@ -21,18 +21,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://D:/Google Drive/Java/postgresql-42.7.3.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="lombok" level="project" />
     <orderEntry type="library" name="servlet-api" level="project" />
+    <orderEntry type="library" name="javax.servlet.jsp.jstl-1.2.5" level="project" />
+    <orderEntry type="library" name="jstl-api-1.2" level="project" />
     <orderEntry type="library" name="postgresql-42.7.3" level="project" />
   </component>
 </module>

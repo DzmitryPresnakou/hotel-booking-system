@@ -1,6 +1,9 @@
 package com.presnakov.hotelBookingSystem.servlet;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
+import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
+import com.presnakov.hotelBookingSystem.exception.ValidationException;
+import com.presnakov.hotelBookingSystem.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +16,8 @@ import java.util.List;
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
+    private final UserService userService = UserService.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("roles", List.of("USER", "ADMIN"));
@@ -23,9 +28,21 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var firstName = req.getParameter("firstName");
-        var lastName = req.getParameter("lastName");
-        var email = req.getParameter("email");
-        var password = req.getParameter("password");
-        var role = req.getParameter("role");
+
+        CreateUserDto userDto = CreateUserDto.builder()
+                .firstName(req.getParameter("firstName"))
+                .lastName(req.getParameter("lastName"))
+                .email(req.getParameter("email"))
+                .password(req.getParameter("password"))
+                .userRole(req.getParameter("role"))
+                .build();
+        try {
+            userService.create(userDto);
+            resp.sendRedirect("/login");
+        } catch (ValidationException exception) {
+            req.setAttribute("errors", exception.getErrors());
+            doGet(req, resp);
+        }
+
     }
 }

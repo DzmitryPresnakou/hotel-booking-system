@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class HotelDao implements Dao<Long, Hotel> {
+public class HotelDao implements Dao<Integer, Hotel> {
 
     private static final HotelDao INSTANCE = new HotelDao();
 
@@ -48,10 +48,10 @@ public class HotelDao implements Dao<Long, Hotel> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Hotel with id %s not found", id), throwables);
@@ -67,7 +67,7 @@ public class HotelDao implements Dao<Long, Hotel> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                hotel.setId(generatedKeys.getLong(ID));
+                hotel.setId(generatedKeys.getInt(ID));
             }
             return hotel;
         } catch (SQLException throwables) {
@@ -80,7 +80,7 @@ public class HotelDao implements Dao<Long, Hotel> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, hotel.getName());
-            preparedStatement.setLong(2, hotel.getId());
+            preparedStatement.setInt(2, hotel.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Hotel with id %s not found", hotel.getId()), throwables.getCause());
@@ -88,7 +88,7 @@ public class HotelDao implements Dao<Long, Hotel> {
     }
 
     @Override
-    public Optional<Hotel> findById(Long id) {
+    public Optional<Hotel> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -96,9 +96,9 @@ public class HotelDao implements Dao<Long, Hotel> {
         }
     }
 
-    public Optional<Hotel> findById(Long id, Connection connection) {
+    public Optional<Hotel> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             Hotel hotel = null;
             if (resultSet.next()) {
@@ -127,7 +127,7 @@ public class HotelDao implements Dao<Long, Hotel> {
 
     private Hotel buildHotel(ResultSet resultSet) throws SQLException {
         return new Hotel(
-                resultSet.getLong(ID),
+                resultSet.getInt(ID),
                 resultSet.getString(NAME)
         );
     }

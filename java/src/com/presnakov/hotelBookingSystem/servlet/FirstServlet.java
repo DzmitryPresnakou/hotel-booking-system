@@ -15,7 +15,7 @@ import java.io.IOException;
 @WebServlet("/first")
 public class FirstServlet extends HttpServlet {
 
-    private final Dao<Long, Hotel> dao = HotelDao.getInstance();
+    private final Dao<Integer, Hotel> dao = HotelDao.getInstance();
 
     @Override
     public void init(ServletConfig config) throws ServletException {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRoleDao implements Dao<Long, UserRole> {
+public class UserRoleDao implements Dao<Integer, UserRole> {
 
     private static final UserRoleDao INSTANCE = new UserRoleDao();
 
@@ -49,10 +49,10 @@ public class UserRoleDao implements Dao<Long, UserRole> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Role with id %s not found", id), throwables);
@@ -68,7 +68,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                userRole.setId(generatedKeys.getLong(ID));
+                userRole.setId(generatedKeys.getInt(ID));
             }
             return userRole;
         } catch (SQLException throwables) {
@@ -81,7 +81,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, String.valueOf(userRole.getUserRoleEnum()));
-            preparedStatement.setLong(2, userRole.getId());
+            preparedStatement.setInt(2, userRole.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Role status with id %s not found", userRole.getId()), throwables.getCause());
@@ -89,7 +89,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
     }
 
     @Override
-    public Optional<UserRole> findById(Long id) {
+    public Optional<UserRole> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -97,9 +97,9 @@ public class UserRoleDao implements Dao<Long, UserRole> {
         }
     }
 
-    public Optional<UserRole> findById(Long id, Connection connection) {
+    public Optional<UserRole> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             UserRole userRole = null;
             if (resultSet.next()) {
@@ -128,7 +128,7 @@ public class UserRoleDao implements Dao<Long, UserRole> {
 
     private UserRole buildUserRole(ResultSet resultSet) throws SQLException {
         return new UserRole(
-                resultSet.getLong(ID),
+                resultSet.getInt(ID),
                 UserRoleEnum.valueOf(resultSet.getObject(ROLE, String.class).toUpperCase())
         );
     }

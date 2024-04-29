@@ -1,6 +1,6 @@
 package com.presnakov.hotelBookingSystem.servlet;
 
-import com.presnakov.hotelBookingSystem.dto.UserDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserDto;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +20,7 @@ public class SessionServlet extends HttpServlet {
         var user = (UserDto) session.getAttribute(USER);
         if (user == null) {
             user = UserDto.builder()
-                    .id(25L)
+                    .id(25)
                     .mail("test@gmail.com")
                     .build();
             session.setAttribute(USER, user);

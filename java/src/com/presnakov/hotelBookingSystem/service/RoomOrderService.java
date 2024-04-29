@@ -1,7 +1,7 @@
 package com.presnakov.hotelBookingSystem.service;
 
 import com.presnakov.hotelBookingSystem.dao.RoomOrderDao;
-import com.presnakov.hotelBookingSystem.dto.RoomOrderDto;
+import com.presnakov.hotelBookingSystem.dto.room.RoomOrderDto;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class RoomOrderService {
     private RoomOrderService() {
     }
 
-    public List<RoomOrderDto> findAllByRoomId(Long roomId) {
+    public List<RoomOrderDto> findAllByRoomId(Integer roomId) {
         return roomOrderDao.findAllByRoomId(roomId).stream()
                 .map(roomOrder -> RoomOrderDto.builder().id(roomOrder.getId())
                         .roomId(roomOrder.getId())

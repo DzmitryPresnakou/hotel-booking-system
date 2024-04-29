@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderStatusDao implements Dao<Long, OrderStatus> {
+public class OrderStatusDao implements Dao<Integer, OrderStatus> {
 
     private static final OrderStatusDao INSTANCE = new OrderStatusDao();
 
@@ -49,10 +49,10 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Order status with id %s not found", id), throwables);
@@ -68,7 +68,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                orderStatus.setId(generatedKeys.getLong(ID));
+                orderStatus.setId(generatedKeys.getInt(ID));
             }
             return orderStatus;
         } catch (SQLException throwables) {
@@ -81,7 +81,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, String.valueOf(orderStatus.getOrderStatusEnum()));
-            preparedStatement.setLong(2, orderStatus.getId());
+            preparedStatement.setInt(2, orderStatus.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Order status with id %s not found", orderStatus.getId()), throwables.getCause());
@@ -89,7 +89,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
     }
 
     @Override
-    public Optional<OrderStatus> findById(Long id) {
+    public Optional<OrderStatus> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -97,9 +97,9 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
         }
     }
 
-    public Optional<OrderStatus> findById(Long id, Connection connection) {
+    public Optional<OrderStatus> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             OrderStatus orderStatus = null;
             if (resultSet.next()) {
@@ -128,7 +128,7 @@ public class OrderStatusDao implements Dao<Long, OrderStatus> {
 
     private OrderStatus buildOrderStatus(ResultSet resultSet) throws SQLException {
         return new OrderStatus(
-                resultSet.getLong(ID),
+                resultSet.getInt(ID),
                 OrderStatusEnum.valueOf(resultSet.getObject(ORDER_STATUS, String.class).toUpperCase())
         );
     }

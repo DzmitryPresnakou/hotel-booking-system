@@ -1,4 +1,4 @@
-package com.presnakov.hotelBookingSystem.dto;
+package com.presnakov.hotelBookingSystem.dto.room;
 
 import lombok.*;
 
@@ -6,6 +6,6 @@ import lombok.*;
 @Builder
 public class RoomDto {
 
-    Long id;
+    Integer id;
     String description;
 }
