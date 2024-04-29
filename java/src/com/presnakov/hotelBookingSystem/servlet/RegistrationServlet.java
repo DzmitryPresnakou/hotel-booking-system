@@ -17,6 +17,8 @@ import java.util.List;
 public class RegistrationServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
+    private final String ADMIN_ROLE_ID = "1";
+    private final String USER_ROLE_ID = "2";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,22 +29,21 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var firstName = req.getParameter("firstName");
 
         CreateUserDto userDto = CreateUserDto.builder()
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .email(req.getParameter("email"))
                 .password(req.getParameter("password"))
-                .userRole(req.getParameter("role"))
+                .userRole(USER_ROLE_ID)
+                .isActive(String.valueOf(true))
                 .build();
         try {
             userService.create(userDto);
-            resp.sendRedirect("/login");
+            resp.sendRedirect("/users");
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);
         }
-
     }
 }

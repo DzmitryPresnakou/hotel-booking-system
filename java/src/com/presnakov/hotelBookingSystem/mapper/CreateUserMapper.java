@@ -3,7 +3,6 @@ package com.presnakov.hotelBookingSystem.mapper;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.entity.UserRole;
-import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 
 public class CreateUserMapper implements Mapper<CreateUserDto, User>{
 

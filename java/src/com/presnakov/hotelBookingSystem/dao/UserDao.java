@@ -2,13 +2,11 @@ package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.entity.User;
-import com.presnakov.hotelBookingSystem.exception.DaoException;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +47,8 @@ public class UserDao implements Dao<Integer, User> {
                    email,
                    password,
                    is_active,
+                   ur.id,
+                   user_role_id,
                    ur.role
             FROM users
             JOIN public.user_role ur

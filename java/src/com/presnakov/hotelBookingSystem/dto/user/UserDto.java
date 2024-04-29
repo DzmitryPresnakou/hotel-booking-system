@@ -7,5 +7,5 @@ import lombok.Value;
 @Builder
 public class UserDto {
     Integer id;
-    String mail;
+    String email;
 }
