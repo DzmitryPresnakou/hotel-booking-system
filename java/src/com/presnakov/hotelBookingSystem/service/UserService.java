@@ -7,13 +7,14 @@ import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateUserMapper;
 import com.presnakov.hotelBookingSystem.validator.CreateUserValidator;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserService {
 
     private static final UserService INSTANCE = new UserService();

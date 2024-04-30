@@ -3,7 +3,10 @@ package com.presnakov.hotelBookingSystem.mapper;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.entity.UserRole;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateUserMapper implements Mapper<CreateUserDto, User>{
 
     private static final CreateUserMapper INSTANCE = new CreateUserMapper();
