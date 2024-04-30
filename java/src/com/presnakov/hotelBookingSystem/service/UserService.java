@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -44,5 +45,20 @@ public class UserService {
                         .email(user.getEmail())
                         .build())
                 .collect(toList());
+    }
+
+    public boolean deleteUser(Integer id) {
+        if (id < 0) {
+            return false;
+        }
+        return userDao.delete(id);
+    }
+
+    public UserDto getUser(Integer id) {
+        Optional<User> user = userDao.findById(id);
+        return user.map(value -> UserDto.builder()
+                .id(value.getId())
+                .email(value.getEmail())
+                .build()).orElse(null);
     }
 }

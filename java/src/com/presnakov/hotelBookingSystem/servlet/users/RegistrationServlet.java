@@ -1,4 +1,4 @@
-package com.presnakov.hotelBookingSystem.servlet;
+package com.presnakov.hotelBookingSystem.servlet.users;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;

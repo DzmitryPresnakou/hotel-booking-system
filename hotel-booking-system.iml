@@ -27,5 +27,9 @@
     <orderEntry type="library" name="jstl-api-1.2" level="project" />
     <orderEntry type="library" name="postgresql-42.7.3" level="project" />
     <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="font-awesome" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="bootstrap.bundle" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
   </component>
 </module>
