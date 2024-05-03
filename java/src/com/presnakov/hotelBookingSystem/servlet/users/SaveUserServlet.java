@@ -2,7 +2,10 @@ package com.presnakov.hotelBookingSystem.servlet.users;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
+import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 import com.presnakov.hotelBookingSystem.exception.ValidationException;
+import com.presnakov.hotelBookingSystem.service.UserRoleService;
 import com.presnakov.hotelBookingSystem.service.UserService;
 
 import javax.servlet.ServletException;
@@ -11,18 +14,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-@WebServlet("/registration")
-public class RegistrationServlet extends HttpServlet {
+@WebServlet("/users/save_user")
+public class SaveUserServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
-    private final Integer USER_ROLE_ID = 2;
+    private final UserRoleService userRoleService = UserRoleService.getInstance();
+    private final String ADMIN_ROLE_ID = "1";
+    private final String USER_ROLE_ID = "2";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.setAttribute("roles", List.of("USER", "ADMIN"));
-        req.getRequestDispatcher(JspHelper.getPath("registration"))
+        req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
+        Integer id = Integer.valueOf(req.getParameter("id"));
+        UserCompleteDto userCompleteDto = userService.getUser(id);
+
+        req.setAttribute("user", userCompleteDto);
+        req.getRequestDispatcher(JspHelper.getPath("save_user"))
                 .forward(req, resp);
     }
 
@@ -30,15 +40,16 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         CreateUserDto userDto = CreateUserDto.builder()
+                .id(Integer.valueOf(req.getParameter("id")))
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .email(req.getParameter("email"))
                 .password(req.getParameter("password"))
-                .userRole(USER_ROLE_ID)
-                .isActive(String.valueOf(true))
+                .userRole(userRoleService.getUserRoleId(UserRoleEnum.valueOf(req.getParameter("role"))))
+                .isActive(req.getParameter("isActive"))
                 .build();
         try {
-            userService.create(userDto);
+            userService.update(userDto);
             resp.sendRedirect("/users");
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());

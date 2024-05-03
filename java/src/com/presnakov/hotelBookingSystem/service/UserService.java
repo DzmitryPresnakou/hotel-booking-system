@@ -2,7 +2,8 @@ package com.presnakov.hotelBookingSystem.service;
 
 import com.presnakov.hotelBookingSystem.dao.UserDao;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
-import com.presnakov.hotelBookingSystem.dto.user.UserDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserRoleDto;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateUserMapper;
@@ -28,21 +29,38 @@ public class UserService {
         return INSTANCE;
     }
 
-    public Integer create(CreateUserDto userDto) {
-        var validationResult = createUserValidator.isValid(userDto);
+    public Integer create(CreateUserDto createUserDto) {
+        var validationResult = createUserValidator.isValid(createUserDto);
         if (!validationResult.isValid()) {
             throw new ValidationException(validationResult.getErrors());
         }
-        User userEntity = createUserMapper.mapFrom(userDto);
+        User userEntity = createUserMapper.mapFrom(createUserDto);
         userDao.save(userEntity);
         return userEntity.getId();
     }
 
-    public List<UserDto> findAll() {
+    public Integer update(CreateUserDto createUserDto) {
+        var validationResult = createUserValidator.isValid(createUserDto);
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult.getErrors());
+        }
+        User userEntity = createUserMapper.mapFrom(createUserDto);
+        userDao.update(userEntity);
+        return userEntity.getId();
+    }
+
+    public List<UserCompleteDto> findAll() {
         return userDao.findAll().stream()
-                .map(user -> UserDto.builder()
+                .map(user -> UserCompleteDto.builder()
                         .id(user.getId())
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
                         .email(user.getEmail())
+                        .password(user.getPassword())
+                        .userRoleDto(UserRoleDto.builder()
+                                .userRoleEnum(user.getUserRole().getUserRoleEnum())
+                                .build())
+                        .isActive(user.getIsActive())
                         .build())
                 .collect(toList());
     }
@@ -51,14 +69,21 @@ public class UserService {
         if (id < 0) {
             return false;
         }
-        return userDao.delete(id);
+        return userDao.softDelete(id);
     }
 
-    public UserDto getUser(Integer id) {
+    public UserCompleteDto getUser(Integer id) {
         Optional<User> user = userDao.findById(id);
-        return user.map(value -> UserDto.builder()
+        return user.map(value -> UserCompleteDto.builder()
                 .id(value.getId())
+                .firstName(value.getFirstName())
+                .lastName(value.getLastName())
                 .email(value.getEmail())
+                .password(value.getPassword())
+                .userRoleDto(UserRoleDto.builder()
+                        .userRoleEnum(value.getUserRole().getUserRoleEnum())
+                        .build())
+                .isActive(value.getIsActive())
                 .build()).orElse(null);
     }
 }

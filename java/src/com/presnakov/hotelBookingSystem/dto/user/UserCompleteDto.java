@@ -5,12 +5,12 @@ import lombok.Value;
 
 @Value
 @Builder
-public class CreateUserDto {
+public class UserCompleteDto {
     Integer id;
     String firstName;
     String lastName;
     String email;
     String password;
-    Integer userRole;
-    String isActive;
+    UserRoleDto userRoleDto;
+    Boolean isActive;
 }

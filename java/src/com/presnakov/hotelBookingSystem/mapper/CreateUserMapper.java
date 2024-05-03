@@ -3,6 +3,7 @@ package com.presnakov.hotelBookingSystem.mapper;
 import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.entity.UserRole;
+import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,12 +15,13 @@ public class CreateUserMapper implements Mapper<CreateUserDto, User>{
     @Override
     public User mapFrom(CreateUserDto object) {
         return User.builder()
+                .id(object.getId())
                 .firstName(object.getFirstName())
                 .lastName(object.getLastName())
                 .email(object.getEmail())
                 .password(object.getPassword())
                 .userRole(UserRole.builder()
-                        .id(Integer.valueOf(object.getUserRole()))
+                        .id(object.getUserRole())
                         .build())
                 .isActive(Boolean.valueOf(object.getIsActive()))
                 .build();

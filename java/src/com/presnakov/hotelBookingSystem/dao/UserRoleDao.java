@@ -38,6 +38,11 @@ public class UserRoleDao implements Dao<Integer, UserRole> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_ROLE = """
+            SELECT id
+            FROM user_role
+            WHERE role = ?
+            """;
     private static final String ID = "id";
     private static final String ROLE = "role";
 
@@ -94,6 +99,18 @@ public class UserRoleDao implements Dao<Integer, UserRole> {
             return findById(id, connection);
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Role with id %s not found", id), throwables);
+        }
+    }
+
+    public Integer findByRole(UserRoleEnum role) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_ROLE)) {
+            preparedStatement.setObject(1, role.name());
+            var resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getObject(ID, Integer.class);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("UserRole with role %s not found", role), throwables);
         }
     }
 
