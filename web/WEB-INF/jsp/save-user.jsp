@@ -4,10 +4,10 @@
 <html>
 <head>
     <%@include file="header.jsp" %>
-    <title>Edit user</title>
+    <title>Save user</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/users/save_user" method="post">
+<form action="${pageContext.request.contextPath}save-user" method="post">
 
     <input type="hidden" name="isActive" id="isActiveId" value="${requestScope.user.isActive}">
     <input type="hidden" name="id" id="userId" value="${requestScope.user.id}">
@@ -21,10 +21,13 @@
     <label for="emailId">Email:
         <input type="text" name="email" id="emailId" value="${requestScope.user.email}">
     </label><br>
+
+    <label for="passwordId">Password:
+        <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
+    </label><br>
+
     <c:if test="${requestScope.user != null}">
-        <label for="passwordId">Password:
-            <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
-        </label><br>
+
         <label for="roleId">Role:
             <select name="role" id="roleId">
                 <c:forEach var="role" items="${requestScope.roles}">
@@ -32,6 +35,10 @@
                 </c:forEach>
             </select>
         </label><br>
+
+    </c:if>
+    <c:if test="${requestScope.user == null}">
+        <input type="hidden" name="role" id="roleIdHidden" value="USER">
 
     </c:if>
     <button type="submit">Send</button>
@@ -44,5 +51,13 @@
         </div>
     </c:if>
 </form>
+<c:if test="${requestScope.user != null}">
+<div class="list-group-item">
+    <c:url value="/users" var="inputURL"/>
+    <h5>
+        <a href="${inputURL}">Show users list</a>
+    </h5>
+</div>
+</c:if>
 </body>
 </html>

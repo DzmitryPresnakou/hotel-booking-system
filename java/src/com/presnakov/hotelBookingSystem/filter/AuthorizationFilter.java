@@ -15,7 +15,7 @@ import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.*;
 public class AuthorizationFilter implements Filter {
 
 
-    private static final Set<String> PUBLIC_PATH = Set.of(LOGIN, REGISTRATION, ROOMS);
+    private static final Set<String> PUBLIC_PATH = Set.of(LOGIN, SAVE_USER, ROOMS);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

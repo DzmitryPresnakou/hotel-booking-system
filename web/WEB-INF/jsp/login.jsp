@@ -14,9 +14,12 @@
         <input type="password" name="password" id="password" required>
     </label><br>
     <button type="submit">Login</button>
-    <a href="${pageContext.request.contextPath}/registration">
-        <button type="button">Register</button>
-    </a>
+    <span><c:url value="/save-user" var="inputURL"/>
+            <a href="${inputURL}">
+            <button type="button">Register</button>
+            </a>
+    </span>
+
     <c:if test="${param.error != null}">
         <div style="color: red">
             <span>Email or password is not correct</span>

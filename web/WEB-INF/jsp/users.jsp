@@ -50,8 +50,7 @@
                                             <h5 class="mt-0 font-weight-bold mb-2">${user.email}</h5>
                                             <p class="mt-0 font-weight-bold mb-2">Имя: ${user.firstName}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Фамилия: ${user.lastName}</p>
-                                            <p class="mt-0 font-weight-bold mb-2">
-                                                Роль: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
+                                            <p class="mt-0 font-weight-bold mb-2">Роль: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Id: ${user.id}</p>
                                             <c:url var="deleteUrl"
                                                    value="${pageContext.request.contextPath}users/delete">
@@ -60,7 +59,7 @@
                                             <a href="${deleteUrl}">
                                                 <button type="button" class="btn btn-danger">Удалить</button>
                                             </a>
-                                            <c:url value="${pageContext.request.contextPath}users/save_user"
+                                            <c:url value="${pageContext.request.contextPath}save-user"
                                                    var="saveURL">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
@@ -79,13 +78,13 @@
             </c:choose>
             <div class="list-group-item">
                 <div>
-                    <span><c:url value="/registration" var="inputURL"/>
+                   <span><c:url value="/save-user" var="inputURL"/>
 						<h5>
 							<a href="${inputURL}">
-                                <button type="button" class="btn btn-info">Add new user</button>
+                               <button type="button" class="btn btn-info">Add new user</button>
                             </a>
 						</h5>
-                    </span>
+                   </span>
                     <span><h5>${requestScope.message}</h5></span>
                 </div>
             </div>
