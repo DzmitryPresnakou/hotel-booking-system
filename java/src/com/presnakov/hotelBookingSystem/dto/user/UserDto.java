@@ -1,4 +1,4 @@
-package com.presnakov.hotelBookingSystem.dto;
+package com.presnakov.hotelBookingSystem.dto.user;
 
 import lombok.Builder;
 import lombok.Value;
@@ -6,6 +6,6 @@ import lombok.Value;
 @Value
 @Builder
 public class UserDto {
-    Long id;
-    String mail;
+    Integer id;
+    String email;
 }

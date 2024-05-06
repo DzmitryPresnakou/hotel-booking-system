@@ -4,6 +4,7 @@
 
 <html>
 <head>
+    <%@include file="header.jsp" %>
     <title>Title</title>
 </head>
 <body>

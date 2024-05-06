@@ -4,7 +4,8 @@
 
 <html>
 <head>
-    <title>Title</title>
+    <%@include file="header.jsp" %>
+    <title>Registration</title>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/registration" method="post">
@@ -20,14 +21,15 @@
     <label for="passwordId">Password:
         <input type="password" name="password" id="passwordId">
     </label><br>
-    <label for="roleId">Role:
-        <select name="role" id="roleId">
-            <c:forEach var="role" items="${requestScope.roles}">
-                <option value="${role}">${role}</option>
-            </c:forEach>
-        </select>
-    </label><br>
     <button type="submit">Send</button>
+
+    <c:if test="${not empty requestScope.errors}">
+        <div style="color: red">
+            <c:forEach var="error" items="${requestScope.errors}">
+                <span>${error.message}</span>
+            </c:forEach>
+        </div>
+    </c:if>
 </form>
 </body>
 </html>

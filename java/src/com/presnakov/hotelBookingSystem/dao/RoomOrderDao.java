@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomOrderDao implements Dao<Long, RoomOrder> {
+public class RoomOrderDao implements Dao<Integer, RoomOrder> {
 
     private static final RoomOrderDao INSTANCE = new RoomOrderDao();
 
@@ -79,7 +79,7 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
     private final OrderStatusDao orderStatusDao = OrderStatusDao.getInstance();
     private final PaymentStatusDao paymentStatusDao = PaymentStatusDao.getInstance();
 
-    public List<RoomOrder> findAllByRoomId(Long roomId) {
+    public List<RoomOrder> findAllByRoomId(Integer roomId) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_BY_ROOM_ID)) {
             preparedStatement.setObject(1, roomId);
@@ -97,14 +97,14 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
 
     private RoomOrder buildRoomOrder(ResultSet resultSet) throws SQLException {
         return new RoomOrder(
-                resultSet.getLong(ID),
-                userDao.findById(resultSet.getLong(USER_ID),
+                resultSet.getInt(ID),
+                userDao.findById(resultSet.getInt(USER_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                roomDao.findById(resultSet.getLong(ROOM_ID),
+                roomDao.findById(resultSet.getInt(ROOM_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                orderStatusDao.findById(resultSet.getLong(ORDER_STATUS_ID),
+                orderStatusDao.findById(resultSet.getInt(ORDER_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                paymentStatusDao.findById(resultSet.getLong(PAYMENT_STATUS_ID),
+                paymentStatusDao.findById(resultSet.getInt(PAYMENT_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
                 resultSet.getObject(CHECK_IN_DATE, LocalDateTime.class),
                 resultSet.getObject(CHECK_OUT_DATE, LocalDateTime.class)
@@ -112,10 +112,10 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room order with id %s not found", id), throwables);
@@ -126,17 +126,17 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
     public RoomOrder save(RoomOrder roomOrder) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, roomOrder.getUser().getId());
-            preparedStatement.setLong(2, roomOrder.getRoom().getId());
-            preparedStatement.setLong(3, roomOrder.getOrderStatus().getId());
-            preparedStatement.setLong(4, roomOrder.getPaymentStatus().getId());
+            preparedStatement.setInt(1, roomOrder.getUser().getId());
+            preparedStatement.setInt(2, roomOrder.getRoom().getId());
+            preparedStatement.setInt(3, roomOrder.getOrderStatus().getId());
+            preparedStatement.setInt(4, roomOrder.getPaymentStatus().getId());
             preparedStatement.setObject(5, roomOrder.getCheckInDate());
             preparedStatement.setObject(6, roomOrder.getCheckOutDate());
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                roomOrder.setId(generatedKeys.getLong(ID));
+                roomOrder.setId(generatedKeys.getInt(ID));
             }
             return roomOrder;
         } catch (SQLException throwables) {
@@ -148,13 +148,13 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
     public void update(RoomOrder roomOrder) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setLong(1, roomOrder.getUser().getId());
-            preparedStatement.setLong(2, roomOrder.getRoom().getId());
-            preparedStatement.setLong(3, roomOrder.getOrderStatus().getId());
-            preparedStatement.setLong(4, roomOrder.getPaymentStatus().getId());
+            preparedStatement.setInt(1, roomOrder.getUser().getId());
+            preparedStatement.setInt(2, roomOrder.getRoom().getId());
+            preparedStatement.setInt(3, roomOrder.getOrderStatus().getId());
+            preparedStatement.setInt(4, roomOrder.getPaymentStatus().getId());
             preparedStatement.setObject(5, roomOrder.getCheckInDate());
             preparedStatement.setObject(6, roomOrder.getCheckOutDate());
-            preparedStatement.setLong(7, roomOrder.getId());
+            preparedStatement.setInt(7, roomOrder.getId());
 
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -163,7 +163,7 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
     }
 
     @Override
-    public Optional<RoomOrder> findById(Long id) {
+    public Optional<RoomOrder> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -171,9 +171,9 @@ public class RoomOrderDao implements Dao<Long, RoomOrder> {
         }
     }
 
-    public Optional<RoomOrder> findById(Long id, Connection connection) {
+    public Optional<RoomOrder> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             RoomOrder roomOrder = null;
             if (resultSet.next()) {

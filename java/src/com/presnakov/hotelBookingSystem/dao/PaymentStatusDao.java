@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
+public class PaymentStatusDao implements Dao<Integer, PaymentStatus> {
 
     private static final PaymentStatusDao INSTANCE = new PaymentStatusDao();
 
@@ -49,10 +49,10 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
-            prepareStatement.setLong(1, id);
+            prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Payment status with id %s not found", id), throwables);
@@ -68,7 +68,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                paymentStatus.setId(generatedKeys.getLong(ID));
+                paymentStatus.setId(generatedKeys.getInt(ID));
             }
             return paymentStatus;
         } catch (SQLException throwables) {
@@ -81,7 +81,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, String.valueOf(paymentStatus.getPaymentStatusEnum()));
-            preparedStatement.setLong(2, paymentStatus.getId());
+            preparedStatement.setInt(2, paymentStatus.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Payment status with id %s not found", paymentStatus.getId()), throwables.getCause());
@@ -89,7 +89,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
     }
 
     @Override
-    public Optional<PaymentStatus> findById(Long id) {
+    public Optional<PaymentStatus> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
         } catch (SQLException throwables) {
@@ -97,9 +97,9 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
         }
     }
 
-    public Optional<PaymentStatus> findById(Long id, Connection connection) {
+    public Optional<PaymentStatus> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             var resultSet = preparedStatement.executeQuery();
             PaymentStatus paymentStatus = null;
             if (resultSet.next()) {
@@ -128,7 +128,7 @@ public class PaymentStatusDao implements Dao<Long, PaymentStatus> {
 
     private PaymentStatus buildPaymentStatus(ResultSet resultSet) throws SQLException {
         return new PaymentStatus(
-                resultSet.getLong(ID),
+                resultSet.getInt(ID),
                 PaymentStatusEnum.valueOf(resultSet.getObject(PAYMENT_STATUS, String.class).toUpperCase())
         );
     }

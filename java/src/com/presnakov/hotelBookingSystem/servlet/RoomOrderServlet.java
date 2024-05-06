@@ -17,8 +17,8 @@ public class RoomOrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var roomId = Long.valueOf(req.getParameter("roomId"));
-        req.setAttribute("orders", roomOrderService.findAllByRoomId(roomId));
+
+        req.setAttribute("orders", roomOrderService.findAll());
         req.getRequestDispatcher(JspHelper.getPath("orders"))
                 .forward(req, resp);
     }
