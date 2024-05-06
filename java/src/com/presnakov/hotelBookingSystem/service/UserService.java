@@ -7,6 +7,7 @@ import com.presnakov.hotelBookingSystem.dto.user.UserRoleDto;
 import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateUserMapper;
+import com.presnakov.hotelBookingSystem.mapper.UserMapper;
 import com.presnakov.hotelBookingSystem.validator.CreateUserValidator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,15 @@ public class UserService {
     private final CreateUserValidator createUserValidator = CreateUserValidator.getInstance();
     private final UserDao userDao = UserDao.getInstance();
     private final CreateUserMapper createUserMapper = CreateUserMapper.getInstance();
+    private final UserMapper userMapper = UserMapper.getInstance();
 
     public static UserService getInstance() {
         return INSTANCE;
+    }
+
+    public Optional<UserCompleteDto> login(String email, String password) {
+        return userDao.findByEmailAndPassword(email, password)
+                .map(userMapper::mapFrom);
     }
 
     public Integer create(CreateUserDto createUserDto) {
@@ -58,6 +65,7 @@ public class UserService {
                         .email(user.getEmail())
                         .password(user.getPassword())
                         .userRoleDto(UserRoleDto.builder()
+                                .id(user.getUserRole().getId())
                                 .userRoleEnum(user.getUserRole().getUserRoleEnum())
                                 .build())
                         .isActive(user.getIsActive())

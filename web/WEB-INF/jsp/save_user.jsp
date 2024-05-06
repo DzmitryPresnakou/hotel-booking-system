@@ -1,19 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<%--<%@ page contentType="application/x-www-form-urlencoded;charset=UTF-8" pageEncoding="UTF-8" %>--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
+    <%@include file="header.jsp" %>
     <title>Edit user</title>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/users/save_user" method="post">
 
     <input type="hidden" name="isActive" id="isActiveId" value="${requestScope.user.isActive}">
-
-    <label for="firstNameId">Id:
-        <input type="text" name="id" id="userId" value="${requestScope.user.id}">
-    </label><br>
+    <input type="hidden" name="id" id="userId" value="${requestScope.user.id}">
 
     <label for="firstNameId">First name:
         <input type="text" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">

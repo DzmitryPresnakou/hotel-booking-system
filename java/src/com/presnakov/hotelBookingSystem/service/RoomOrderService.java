@@ -25,6 +25,15 @@ public class RoomOrderService {
                 .collect(toList());
     }
 
+    public List<RoomOrderDto> findAll() {
+        return roomOrderDao.findAll().stream()
+                .map(roomOrder -> RoomOrderDto.builder().id(roomOrder.getId())
+                        .roomId(roomOrder.getId())
+                        .orderStatusId(roomOrder.getOrderStatus().getId())
+                        .build())
+                .collect(toList());
+    }
+
     public static RoomOrderService getInstance() {
         return INSTANCE;
     }

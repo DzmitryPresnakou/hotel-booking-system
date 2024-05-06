@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +56,23 @@ public class UserDao implements Dao<Integer, User> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE users.id = ?
             """;
+    private static final String GET_BY_EMAIL_AND_PASSWORD_SQL = """
+            SELECT users.id,
+                   first_name,
+                   last_name,
+                   email,
+                   password,
+                   is_active,
+                   ur.id,
+                   user_role_id,
+                   ur.role
+            FROM users
+            JOIN public.user_role ur
+            ON user_role_id = ur.id
+            WHERE email = ?
+            AND password = ?
+            AND is_active = ?
+            """;
     private static final String ID = "id";
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
@@ -64,6 +80,7 @@ public class UserDao implements Dao<Integer, User> {
     private static final String PASSWORD = "password";
     private static final String USER_ROLE_ID = "user_role_id";
     private static final String IS_ACTIVE = "is_active";
+    private static final Boolean IS_ACTIVE_USER = true;
 
     private final UserRoleDao userRoleDao = UserRoleDao.getInstance();
 
@@ -152,17 +169,22 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    private User buildUser(ResultSet resultSet) throws SQLException {
-        return new User(
-                resultSet.getInt(ID),
-                resultSet.getString(FIRST_NAME),
-                resultSet.getString(LAST_NAME),
-                resultSet.getString(EMAIL),
-                resultSet.getString(PASSWORD),
-                userRoleDao.findById(resultSet.getInt(USER_ROLE_ID),
-                        resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getBoolean(IS_ACTIVE)
-        );
+    @SneakyThrows
+    public Optional<User> findByEmailAndPassword(String email, String password) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(GET_BY_EMAIL_AND_PASSWORD_SQL)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            preparedStatement.setBoolean(3, IS_ACTIVE_USER);
+
+            var resultSet = preparedStatement.executeQuery();
+            User user = null;
+            if (resultSet.next()) {
+                user = buildUser(resultSet);
+            }
+
+            return Optional.ofNullable(user);
+        }
     }
 
     @Override
@@ -177,5 +199,18 @@ public class UserDao implements Dao<Integer, User> {
             }
             return users;
         }
+    }
+
+    private User buildUser(ResultSet resultSet) throws java.sql.SQLException {
+        return User.builder()
+                .id(resultSet.getObject(ID, Integer.class))
+                .firstName(resultSet.getObject(FIRST_NAME, String.class))
+                .lastName(resultSet.getObject(LAST_NAME, String.class))
+                .email(resultSet.getObject(EMAIL, String.class))
+                .password(resultSet.getObject(PASSWORD, String.class))
+                .userRole(userRoleDao.findById(resultSet.getInt(USER_ROLE_ID),
+                        resultSet.getStatement().getConnection()).orElse(null))
+                .isActive(resultSet.getObject(IS_ACTIVE, Boolean.class))
+                .build();
     }
 }

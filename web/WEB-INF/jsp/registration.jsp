@@ -4,6 +4,7 @@
 
 <html>
 <head>
+    <%@include file="header.jsp" %>
     <title>Registration</title>
 </head>
 <body>
@@ -22,13 +23,13 @@
     </label><br>
     <button type="submit">Send</button>
 
-        <c:if test="${not empty requestScope.errors}">
-            <div style="color: red">
-                <c:forEach var="error" items="${requestScope.errors}">
-                    <span>${error.message}</span>
-                </c:forEach>
-            </div>
-        </c:if>
+    <c:if test="${not empty requestScope.errors}">
+        <div style="color: red">
+            <c:forEach var="error" items="${requestScope.errors}">
+                <span>${error.message}</span>
+            </c:forEach>
+        </div>
+    </c:if>
 </form>
 </body>
 </html>

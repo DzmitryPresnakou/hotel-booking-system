@@ -21,7 +21,6 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.setAttribute("roles", List.of("USER", "ADMIN"));
         req.getRequestDispatcher(JspHelper.getPath("registration"))
                 .forward(req, resp);
     }
@@ -39,7 +38,7 @@ public class RegistrationServlet extends HttpServlet {
                 .build();
         try {
             userService.create(userDto);
-            resp.sendRedirect("/users");
+            resp.sendRedirect("/login");
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);

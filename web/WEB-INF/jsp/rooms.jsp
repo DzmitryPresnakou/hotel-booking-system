@@ -4,14 +4,15 @@
 
 <html>
 <head>
+    <%@include file="header.jsp" %>
     <title>Title</title>
 </head>
 <body>
-    <h1>Список гостиничных номеров</h1>
-    <ul>
-        <c:forEach var="room" items="${requestScope.rooms}">
-            <li>${room.id} - ${fn:toLowerCase(room.description)}</li>
-        </c:forEach>
-    </ul>
+<h1>Список гостиничных номеров</h1>
+<ul>
+    <c:forEach var="room" items="${requestScope.rooms}">
+        <li>${room.id} - ${fn:toLowerCase(room.description)}</li>
+    </c:forEach>
+</ul>
 </body>
 </html>

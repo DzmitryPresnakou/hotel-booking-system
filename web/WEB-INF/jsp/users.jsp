@@ -11,6 +11,7 @@
     <script type="text/javascript"
             src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <%@include file="header.jsp" %>
     <title>Users</title>
 </head>
 <body>
@@ -49,15 +50,18 @@
                                             <h5 class="mt-0 font-weight-bold mb-2">${user.email}</h5>
                                             <p class="mt-0 font-weight-bold mb-2">Имя: ${user.firstName}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Фамилия: ${user.lastName}</p>
-                                            <p class="mt-0 font-weight-bold mb-2">Роль: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
+                                            <p class="mt-0 font-weight-bold mb-2">
+                                                Роль: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Id: ${user.id}</p>
-                                            <c:url var="deleteUrl" value="${pageContext.request.contextPath}users/delete">
+                                            <c:url var="deleteUrl"
+                                                   value="${pageContext.request.contextPath}users/delete">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${deleteUrl}">
                                                 <button type="button" class="btn btn-danger">Удалить</button>
                                             </a>
-                                            <c:url value="${pageContext.request.contextPath}users/save_user" var="saveURL">
+                                            <c:url value="${pageContext.request.contextPath}users/save_user"
+                                                   var="saveURL">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${saveURL}">
@@ -75,10 +79,10 @@
             </c:choose>
             <div class="list-group-item">
                 <div>
-                    <span><c:url value="${pageContext.request.contextPath}users/save" var="inputURL"/>
+                    <span><c:url value="/registration" var="inputURL"/>
 						<h5>
 							<a href="${inputURL}">
-                                <button type="button" class="btn btn-info">Добавить пользователя</button>
+                                <button type="button" class="btn btn-info">Add new user</button>
                             </a>
 						</h5>
                     </span>
