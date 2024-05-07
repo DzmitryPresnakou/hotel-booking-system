@@ -68,10 +68,20 @@ public class SaveUserServlet extends HttpServlet {
         try {
             if (req.getParameter("id") != null && !req.getParameter("id").isBlank()) {
                 userService.update(userDto);
+                resp.sendRedirect(redirectPage);
             } else {
-                userService.create(userDto);
+                if (userService.getUserByEmail(userDto.getEmail()) == null) {
+                    userService.create(userDto);
+                    req.setAttribute("isCreate", true);
+                    resp.sendRedirect(redirectPage);
+                } else {
+                    req.setAttribute("isCreate", false);
+                    req.setAttribute("message", "User with email " + userDto.getEmail() + " already exists");
+                    req.getRequestDispatcher(JspHelper.getPath("save-user"))
+                            .include(req, resp);
+                }
             }
-            resp.sendRedirect(redirectPage);
+
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);

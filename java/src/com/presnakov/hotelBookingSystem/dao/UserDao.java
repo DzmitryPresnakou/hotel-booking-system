@@ -73,6 +73,21 @@ public class UserDao implements Dao<Integer, User> {
             AND password = ?
             AND is_active = ?
             """;
+    private static final String GET_BY_EMAIL = """
+            SELECT users.id,
+                   first_name,
+                   last_name,
+                   email,
+                   password,
+                   is_active,
+                   ur.id,
+                   user_role_id,
+                   ur.role
+            FROM users
+            JOIN public.user_role ur
+            ON user_role_id = ur.id
+            WHERE email = ?
+            """;
     private static final String ID = "id";
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
@@ -160,6 +175,20 @@ public class UserDao implements Dao<Integer, User> {
     public Optional<User> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setInt(1, id);
+            var resultSet = preparedStatement.executeQuery();
+            User user = null;
+            if (resultSet.next()) {
+                user = buildUser(resultSet);
+            }
+            return Optional.ofNullable(user);
+        }
+    }
+
+    @SneakyThrows
+    public Optional<User> findByEmail(String email) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(GET_BY_EMAIL)) {
+            preparedStatement.setString(1, email);
             var resultSet = preparedStatement.executeQuery();
             User user = null;
             if (resultSet.next()) {

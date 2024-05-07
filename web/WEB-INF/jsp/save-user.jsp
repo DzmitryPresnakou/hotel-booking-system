@@ -59,5 +59,6 @@
     </h5>
 </div>
 </c:if>
+<span><h5 style="color: red">${requestScope.message}</h5></span>
 </body>
 </html>
