@@ -15,7 +15,6 @@
     <title>Users</title>
 </head>
 <body>
-
 <div class="container py-5">
     <div class="row text-center mb-5">
         <div class="col-lg-7 mx-auto">
@@ -30,12 +29,12 @@
                         <div>
                             <span><h5>${requestScope.message}</h5></span>
                         </div>
-                        <div class="list-group-item">
-                            <c:url value="/users" var="inputURL"/>
-                            <h5>
-                                <a href="${inputURL}">Show users list</a>
-                            </h5>
-                        </div>
+                        <c:url value="/users" var="inputURL">
+                            <c:param name="id" value="${user.id}"/>
+                        </c:url>
+                        <a href="${inputURL}">
+                            <button type="button" class="btn btn-info">Show users list</button>
+                        </a>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -52,15 +51,13 @@
                                             <p class="mt-0 font-weight-bold mb-2">Фамилия: ${user.lastName}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Роль: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
                                             <p class="mt-0 font-weight-bold mb-2">Id: ${user.id}</p>
-                                            <c:url var="deleteUrl"
-                                                   value="${pageContext.request.contextPath}users/delete">
+                                            <c:url var="deleteUrl" value="${pageContext.request.contextPath}users/delete">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${deleteUrl}">
                                                 <button type="button" class="btn btn-danger">Удалить</button>
                                             </a>
-                                            <c:url value="${pageContext.request.contextPath}save-user"
-                                                   var="saveURL">
+                                            <c:url value="${pageContext.request.contextPath}save-user" var="saveURL">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${saveURL}">
@@ -76,19 +73,6 @@
                     </ul>
                 </c:otherwise>
             </c:choose>
-            <div class="list-group-item">
-                <div>
-                   <span><c:url value="/save-user" var="inputURL"/>
-						<h5>
-							<a href="${inputURL}">
-                               <button type="button" class="btn btn-info">Add new user</button>
-                            </a>
-						</h5>
-                   </span>
-                    <span><h5>${requestScope.message}</h5></span>
-                </div>
-            </div>
-            <!-- End -->
         </div>
     </div>
 </div>

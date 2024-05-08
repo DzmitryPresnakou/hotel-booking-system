@@ -14,7 +14,6 @@ import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.*;
 @WebFilter("/*")
 public class AuthorizationFilter implements Filter {
 
-
     private static final Set<String> PUBLIC_PATH = Set.of(LOGIN, SAVE_USER, ROOMS);
 
     @Override
