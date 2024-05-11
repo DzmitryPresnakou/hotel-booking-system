@@ -26,7 +26,7 @@
         <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
     </label><br>
 
-    <c:if test="${requestScope.user != null}">
+<%--    <c:if test="${requestScope.user != null}">--%>
 
         <label for="roleId">Role:
             <select name="role" id="roleId">
@@ -36,11 +36,11 @@
             </select>
         </label><br>
 
-    </c:if>
-    <c:if test="${requestScope.user == null}">
-        <input type="hidden" name="role" id="roleIdHidden" value="USER">
+<%--    </c:if>--%>
+<%--    <c:if test="${requestScope.user == null}">--%>
+<%--        <input type="hidden" name="role" id="roleIdHidden" value="USER">--%>
 
-    </c:if>
+<%--    </c:if>--%>
     <button type="submit">Send</button>
 
     <c:if test="${not empty requestScope.errors}">
@@ -51,14 +51,14 @@
         </div>
     </c:if>
 </form>
-<c:if test="${requestScope.user != null}">
+<%--<c:if test="${requestScope.user != null}">--%>
 <div class="list-group-item">
     <c:url value="/users" var="inputURL"/>
     <h5>
         <a href="${inputURL}">Show users list</a>
     </h5>
 </div>
-</c:if>
+<%--</c:if>--%>
 <span><h5 style="color: red">${requestScope.message}</h5></span>
 </body>
 </html>

@@ -14,7 +14,7 @@
         <input type="password" name="password" id="password" required>
     </label><br>
     <button type="submit">Login</button>
-    <span><c:url value="/save-user" var="inputURL"/>
+    <span><c:url value="/registration" var="inputURL"/>
             <a href="${inputURL}">
             <button type="button">Register</button>
             </a>
