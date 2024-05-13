@@ -94,4 +94,19 @@ public class UserService {
                 .isActive(value.getIsActive())
                 .build()).orElse(null);
     }
+
+    public UserCompleteDto getUserByEmail(String email) {
+        Optional<User> user = userDao.findByEmail(email);
+        return user.map(value -> UserCompleteDto.builder()
+                .id(value.getId())
+                .firstName(value.getFirstName())
+                .lastName(value.getLastName())
+                .email(value.getEmail())
+                .password(value.getPassword())
+                .userRoleDto(UserRoleDto.builder()
+                        .userRoleEnum(value.getUserRole().getUserRoleEnum())
+                        .build())
+                .isActive(value.getIsActive())
+                .build()).orElse(null);
+    }
 }

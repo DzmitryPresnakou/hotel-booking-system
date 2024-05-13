@@ -13,39 +13,37 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
-@WebServlet("/users/save_user")
+@WebServlet("/save-user")
 public class SaveUserServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
     private final UserRoleService userRoleService = UserRoleService.getInstance();
-    private final String ADMIN_ROLE_ID = "1";
-    private final String USER_ROLE_ID = "2";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
         Integer id = Integer.valueOf(req.getParameter("id"));
         UserCompleteDto userCompleteDto = userService.getUser(id);
-
         req.setAttribute("user", userCompleteDto);
-        req.getRequestDispatcher(JspHelper.getPath("save_user"))
+        req.getRequestDispatcher(JspHelper.getPath("save-user"))
                 .forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType("text/html");
         CreateUserDto userDto = CreateUserDto.builder()
                 .id(Integer.valueOf(req.getParameter("id")))
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .email(req.getParameter("email"))
                 .password(req.getParameter("password"))
-                .userRole(userRoleService.getUserRoleId(UserRoleEnum.valueOf(req.getParameter("role"))))
+                .userRole(userRoleService.getUserRoleId(UserRoleEnum.valueOf((req.getParameter("role")))))
                 .isActive(req.getParameter("isActive"))
                 .build();
         try {

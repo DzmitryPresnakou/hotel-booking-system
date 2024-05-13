@@ -1,27 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<%--<%@ page contentType="application/x-www-form-urlencoded;charset=UTF-8" pageEncoding="UTF-8" %>--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
-    <%@include file="header.jsp" %>
-    <title>Registration</title>
+    <%@include file="header.jsp"%>
+    <title><fmt:message key="page.registration.title"/></title>
 </head>
 <body>
 <form action="${pageContext.request.contextPath}/registration" method="post">
-    <label for="firstNameId">First name:
+    <label for="firstNameId"><fmt:message key="page.registration.first.name"/>:
         <input type="text" name="firstName" id="firstNameId">
     </label><br>
-    <label for="lastNameId">Last name:
+    <label for="lastNameId"><fmt:message key="page.registration.last.name"/>:
         <input type="text" name="lastName" id="lastNameId">
     </label><br>
-    <label for="emailId">Email:
+    <label for="emailId"><fmt:message key="page.registration.email"/>:
         <input type="text" name="email" id="emailId">
     </label><br>
-    <label for="passwordId">Password:
+    <label for="passwordId"><fmt:message key="page.registration.password"/>:
         <input type="password" name="password" id="passwordId">
     </label><br>
-    <button type="submit">Send</button>
+    <input type="hidden" name="role" id="roleIdHidden" value="USER">
+    <button type="submit"><fmt:message key="page.registration.submit.button"/></button>
 
     <c:if test="${not empty requestScope.errors}">
         <div style="color: red">
@@ -31,5 +31,8 @@
         </div>
     </c:if>
 </form>
+<c:if test="${not empty requestScope.message}">
+<span><h5 style="color: red">${requestScope.message} <fmt:message key="page.registration.error.message"/></h5></span>
+</c:if>
 </body>
 </html>

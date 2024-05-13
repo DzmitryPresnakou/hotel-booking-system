@@ -4,11 +4,11 @@
 
 <html>
 <head>
-    <%@include file="header.jsp" %>
-    <title>Title</title>
+    <%@include file="header.jsp"%>
+    <title><fmt:message key="page.orders.title"/></title>
 </head>
 <body>
-    <h1>Заказанные номера</h1>
+    <h1><fmt:message key="page.orders.title"/></h1>
     <ul>
         <c:forEach var="order" items="${requestScope.orders}">
             <li>

@@ -1,6 +1,6 @@
 package com.presnakov.hotelBookingSystem.filter;
 
-import com.presnakov.hotelBookingSystem.dto.user.UserDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -11,14 +11,13 @@ import java.io.IOException;
 @WebFilter("/admin")
 public class UnsafeFilter implements Filter {
 
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        var user = (UserDto) ((HttpServletRequest) servletRequest).getSession().getAttribute("user");
+        var user = (UserCompleteDto) ((HttpServletRequest) servletRequest).getSession().getAttribute("user");
         if (user != null) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            ((HttpServletResponse) servletResponse).sendRedirect("/registration");
+            ((HttpServletResponse) servletResponse).sendRedirect("/login");
         }
     }
 }
