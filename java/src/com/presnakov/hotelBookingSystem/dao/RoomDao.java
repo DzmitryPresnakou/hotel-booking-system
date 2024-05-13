@@ -84,20 +84,18 @@ public class RoomDao implements Dao<Integer, Room> {
             whereSql.add("room_occupancy = ?");
             parameters.add(filter.roomOccupancy());
         }
-        if (filter.roomClassId() != null) {
+        if (filter.roomClass().getId() != null) {
             whereSql.add("room_class_id = ?");
-            parameters.add(filter.roomClassId());
+            parameters.add(filter.roomClass().getId());
         }
-        if (filter.roomStatusId() != null) {
+        if (filter.roomStatus().getId() != null) {
             whereSql.add("room_status_id = ?");
-            parameters.add(filter.roomStatusId());
+            parameters.add(filter.roomStatus().getId());
         }
         if (filter.hotelId() != null) {
             whereSql.add("hotel_id = ?");
             parameters.add(filter.hotelId());
         }
-        parameters.add(filter.limit());
-        parameters.add(filter.offset());
         var where = whereSql.stream()
                 .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ?"));
 
