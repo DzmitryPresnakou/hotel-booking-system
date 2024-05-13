@@ -24,6 +24,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
         req.getRequestDispatcher(JspHelper.getPath("registration"))
                 .forward(req, resp);
@@ -31,6 +32,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html");
         CreateUserDto userDto = CreateUserDto.builder()
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
@@ -46,7 +48,7 @@ public class RegistrationServlet extends HttpServlet {
                 resp.sendRedirect("/login");
             } else {
                 req.setAttribute("isCreate", false);
-                req.setAttribute("message", "User with email " + userDto.getEmail() + " already exists");
+                req.setAttribute("message", userDto.getEmail());
                 req.getRequestDispatcher(JspHelper.getPath("registration"))
                         .include(req, resp);
             }

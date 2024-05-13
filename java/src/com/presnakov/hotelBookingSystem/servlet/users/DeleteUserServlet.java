@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/users/delete")
 public class DeleteUserServlet extends HttpServlet {
@@ -17,13 +18,13 @@ public class DeleteUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType("text/html");
         Integer id = Integer.valueOf(req.getParameter("id"));
         String email = userService.getUser(id).getEmail();
 
         if (userService.deleteUser(id)) {
             req.setAttribute("isDeleted", true);
-            req.setAttribute("message", "User with email " +  email + " deleted");
+            req.setAttribute("message", email);
         } else {
             req.setAttribute("isDeleted", false);
         }

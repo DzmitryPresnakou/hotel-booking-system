@@ -4,11 +4,11 @@
 
 <html>
 <head>
-    <%@include file="header.jsp" %>
-    <title>Title</title>
+    <%@include file="header.jsp"%>
+    <title><fmt:message key="page.rooms.title"/></title>
 </head>
 <body>
-<h1>Список гостиничных номеров</h1>
+<h1><fmt:message key="page.rooms.title"/></h1>
 <ul>
     <c:forEach var="room" items="${requestScope.rooms}">
         <li>${room.id} - ${fn:toLowerCase(room.description)}</li>

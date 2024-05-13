@@ -25,7 +25,7 @@ public class SaveUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType("text/html");
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
         Integer id = Integer.valueOf(req.getParameter("id"));
         UserCompleteDto userCompleteDto = userService.getUser(id);
@@ -36,7 +36,7 @@ public class SaveUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType("text/html");
         CreateUserDto userDto = CreateUserDto.builder()
                 .id(Integer.valueOf(req.getParameter("id")))
                 .firstName(req.getParameter("firstName"))
