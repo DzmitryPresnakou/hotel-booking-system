@@ -24,11 +24,18 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <c:choose>
-                <c:when test="${requestScope.isDeleted}">
+                <c:when test="${requestScope.isDeleted || requestScope.isTryToDeleteMyself}">
                     <div class="list-group-item">
+                        <c:if test="${requestScope.isDeleted}">
                         <div>
                             <span><h5><fmt:message key="page.users.delete.message"/> ${requestScope.message}</h5></span>
                         </div>
+                        </c:if>
+                        <c:if test="${requestScope.isTryToDeleteMyself}">
+                            <div>
+                                <span><h5><fmt:message key="page.users.not.delete.message"/></h5></span>
+                            </div>
+                        </c:if>
                         <c:url value="/users" var="inputURL">
                             <%-- <c:param name="id" value="${user.id}"/>--%>
                         </c:url>
@@ -44,22 +51,29 @@
                                 <li class="list-group-item">
                                     <div class="media align-items-lg-center flex-column flex-lg-row p-3">
                                         <div class="media-body order-2 order-lg-1">
-                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.email"/>: ${user.email}</p>
-                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.first.name"/>: ${user.firstName}</p>
-                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.last.name"/>: ${user.lastName}</p>
-                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.first.role"/>: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
+                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                    key="page.users.email"/>: ${user.email}</p>
+                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                    key="page.users.first.name"/>: ${user.firstName}</p>
+                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                    key="page.users.last.name"/>: ${user.lastName}</p>
+                                            <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                    key="page.users.first.role"/>: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
 
-                                            <c:url var="deleteUrl" value="${pageContext.request.contextPath}users/delete">
+                                            <c:url var="deleteUrl"
+                                                   value="${pageContext.request.contextPath}users/delete">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${deleteUrl}">
-                                                <button type="button" class="btn btn-danger"><fmt:message key="page.users.delete.button"/></button>
+                                                <button type="button" class="btn btn-danger"><fmt:message
+                                                        key="page.users.delete.button"/></button>
                                             </a>
                                             <c:url value="${pageContext.request.contextPath}save-user" var="saveURL">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${saveURL}">
-                                                <button type="button" class="btn btn-info"><fmt:message key="page.users.edit.button"/></button>
+                                                <button type="button" class="btn btn-info"><fmt:message
+                                                        key="page.users.edit.button"/></button>
                                             </a>
                                         </div>
                                     </div>

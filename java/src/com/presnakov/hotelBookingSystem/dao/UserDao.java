@@ -2,10 +2,11 @@ package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.entity.User;
-import lombok.SneakyThrows;
+import com.presnakov.hotelBookingSystem.exception.DaoException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -107,26 +108,27 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    @SneakyThrows
     public boolean delete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
             prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", id), throwables);
         }
     }
 
-    @SneakyThrows
     public boolean softDelete(Integer id) {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(SOFT_DELETE_SQL)) {
             prepareStatement.setInt(1, id);
             return prepareStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", id), throwables);
         }
     }
 
     @Override
-    @SneakyThrows
     public User save(User user) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, RETURN_GENERATED_KEYS)) {
@@ -138,16 +140,16 @@ public class UserDao implements Dao<Integer, User> {
             preparedStatement.setObject(6, user.getIsActive());
 
             preparedStatement.executeUpdate();
-
             var generatedKeys = preparedStatement.getGeneratedKeys();
             generatedKeys.next();
             user.setId(generatedKeys.getObject(ID, Integer.class));
             return user;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", user.getId()), throwables.getCause());
         }
     }
 
     @Override
-    @SneakyThrows
     public void update(User user) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
@@ -160,18 +162,20 @@ public class UserDao implements Dao<Integer, User> {
             preparedStatement.setInt(7, user.getId());
 
             preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", user.getId()), throwables.getCause());
         }
     }
 
     @Override
-    @SneakyThrows
     public Optional<User> findById(Integer id) {
         try (var connection = ConnectionManager.get()) {
             return findById(id, connection);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room Role with id %s not found", id), throwables);
         }
     }
 
-    @SneakyThrows
     public Optional<User> findById(Integer id, Connection connection) {
         try (var preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
             preparedStatement.setInt(1, id);
@@ -181,10 +185,11 @@ public class UserDao implements Dao<Integer, User> {
                 user = buildUser(resultSet);
             }
             return Optional.ofNullable(user);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with id %s not found", id), throwables);
         }
     }
 
-    @SneakyThrows
     public Optional<User> findByEmail(String email) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(GET_BY_EMAIL)) {
@@ -195,10 +200,11 @@ public class UserDao implements Dao<Integer, User> {
                 user = buildUser(resultSet);
             }
             return Optional.ofNullable(user);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with email %s not found", email), throwables);
         }
     }
 
-    @SneakyThrows
     public Optional<User> findByEmailAndPassword(String email, String password) {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(GET_BY_EMAIL_AND_PASSWORD_SQL)) {
@@ -213,11 +219,12 @@ public class UserDao implements Dao<Integer, User> {
             }
 
             return Optional.ofNullable(user);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("User with email %s not found", email), throwables);
         }
     }
 
     @Override
-    @SneakyThrows
     public List<User> findAll() {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
@@ -227,6 +234,8 @@ public class UserDao implements Dao<Integer, User> {
                 users.add(buildUser(resultSet));
             }
             return users;
+        } catch (SQLException throwables) {
+            throw new DaoException("Users not found", throwables);
         }
     }
 

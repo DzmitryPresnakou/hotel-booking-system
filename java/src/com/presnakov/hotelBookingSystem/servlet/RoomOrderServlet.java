@@ -14,10 +14,11 @@ import java.io.IOException;
 public class RoomOrderServlet extends HttpServlet {
 
     private final RoomOrderService roomOrderService = RoomOrderService.getInstance();
+    private final String CONTENT_TYPE = "text/html";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setContentType(CONTENT_TYPE);
         req.setAttribute("orders", roomOrderService.findAll());
         req.getRequestDispatcher(JspHelper.getPath("orders"))
                 .forward(req, resp);

@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <%@include file="header.jsp"%>
+    <%@include file="header.jsp" %>
     <title><fmt:message key="page.registration.title"/></title>
 </head>
 <body>
@@ -32,7 +32,7 @@
     </c:if>
 </form>
 <c:if test="${not empty requestScope.message}">
-<span><h5 style="color: red">${requestScope.message} <fmt:message key="page.registration.error.message"/></h5></span>
+    <span><h5 style="color: red">${requestScope.message} <fmt:message key="page.registration.error.message"/></h5></span>
 </c:if>
 </body>
 </html>
