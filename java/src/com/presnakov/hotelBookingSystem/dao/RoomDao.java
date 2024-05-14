@@ -191,7 +191,6 @@ public class RoomDao implements Dao<Integer, Room> {
         try (var connection = ConnectionManager.get();
              var prepareStatement = connection.prepareStatement(DELETE_SQL)) {
             prepareStatement.setInt(1, id);
-
             return prepareStatement.executeUpdate() > 0;
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room with id %s not found", id), throwables);

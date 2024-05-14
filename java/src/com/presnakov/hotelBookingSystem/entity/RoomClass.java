@@ -14,5 +14,5 @@ import java.math.BigDecimal;
 public class RoomClass {
     private Integer id;
     private RoomClassEnum comfortClass;
-    private BigDecimal pricePerDay;
+    private Double pricePerDay;
 }

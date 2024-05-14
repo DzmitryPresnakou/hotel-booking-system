@@ -35,6 +35,13 @@ public class RoomService {
         return roomEntity.getId();
     }
 
+    public boolean deleteRoom(Integer id) {
+        if (id < 0) {
+            return false;
+        }
+        return roomDao.delete(id);
+    }
+
     private static RoomCompleteDto getRoomCompleteDto(Room room) {
         return RoomCompleteDto.builder()
                 .id(room.getId())
@@ -49,6 +56,7 @@ public class RoomService {
         return RoomClassDto.builder()
                 .id(room.getRoomClass().getId())
                 .comfortClass(room.getRoomClass().getComfortClass())
+                .pricePerDay(room.getRoomClass().getPricePerDay())
                 .build();
     }
 
