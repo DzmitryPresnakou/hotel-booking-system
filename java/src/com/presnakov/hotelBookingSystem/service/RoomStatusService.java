@@ -1,9 +1,7 @@
 package com.presnakov.hotelBookingSystem.service;
 
 import com.presnakov.hotelBookingSystem.dao.RoomStatusDao;
-import com.presnakov.hotelBookingSystem.dto.room.RoomClassDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomStatusDto;
-import com.presnakov.hotelBookingSystem.entity.RoomClass;
 import com.presnakov.hotelBookingSystem.entity.RoomStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
