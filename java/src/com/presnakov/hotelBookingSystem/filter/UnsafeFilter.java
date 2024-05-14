@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.LOGIN;
+
 @WebFilter("/admin")
 public class UnsafeFilter implements Filter {
 
@@ -17,7 +19,7 @@ public class UnsafeFilter implements Filter {
         if (user != null) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            ((HttpServletResponse) servletResponse).sendRedirect("/login");
+            ((HttpServletResponse) servletResponse).sendRedirect(LOGIN);
         }
     }
 }

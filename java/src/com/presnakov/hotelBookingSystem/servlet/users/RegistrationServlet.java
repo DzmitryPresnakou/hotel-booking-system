@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.LOGIN;
+
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
@@ -46,7 +48,7 @@ public class RegistrationServlet extends HttpServlet {
             if (userService.getUserByEmail(userDto.getEmail()) == null) {
                 userService.create(userDto);
                 req.setAttribute("isCreate", true);
-                resp.sendRedirect("/login");
+                resp.sendRedirect(LOGIN);
             } else {
                 req.setAttribute("isCreate", false);
                 req.setAttribute("message", userDto.getEmail());

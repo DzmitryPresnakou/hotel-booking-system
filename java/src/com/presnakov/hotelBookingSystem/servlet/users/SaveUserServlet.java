@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.USERS;
+
 @WebServlet("/save-user")
 public class SaveUserServlet extends HttpServlet {
 
@@ -48,7 +50,7 @@ public class SaveUserServlet extends HttpServlet {
                 .build();
         try {
             userService.update(userDto);
-            resp.sendRedirect("/users");
+            resp.sendRedirect(USERS);
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);

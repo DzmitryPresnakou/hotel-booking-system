@@ -1,6 +1,7 @@
 package com.presnakov.hotelBookingSystem.filter;
 
 import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
+import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -11,19 +12,27 @@ import java.util.Set;
 
 import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.*;
 
-@WebFilter("/*")
-public class AuthorizationFilter implements Filter {
+@WebFilter(urlPatterns = {"/users/*", "/orders", "/save-user"})
+public class RoleFilter implements Filter {
 
-    private static final Set<String> PUBLIC_PATH = Set.of(LOGIN, REGISTRATION, LOCALE);
+    private static final Set<String> NONPUBLIC_PATH = Set.of(USERS, ORDERS, SAVE_USER, DELETE_USER);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         var uri = ((HttpServletRequest) servletRequest).getRequestURI();
-        if (isPublicPath(uri) || isUserLoggedIn(servletRequest)) {
+        if (isNonpublicPath(uri) && isAdmin(servletRequest)) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             reject(servletRequest, servletResponse);
         }
+    }
+
+    private boolean isAdmin(ServletRequest servletRequest) {
+        var user = (UserCompleteDto) ((HttpServletRequest) servletRequest).getSession().getAttribute("user");
+        if (isUserLoggedIn(servletRequest)) {
+            return UserRoleEnum.ADMIN.equals(user.getUserRoleDto().getUserRoleEnum());
+        }
+        return false;
     }
 
     private boolean isUserLoggedIn(ServletRequest servletRequest) {
@@ -31,8 +40,8 @@ public class AuthorizationFilter implements Filter {
         return user != null;
     }
 
-    private boolean isPublicPath(String uri) {
-        return PUBLIC_PATH.stream().anyMatch(uri::startsWith);
+    private boolean isNonpublicPath(String uri) {
+        return NONPUBLIC_PATH.stream().anyMatch(uri::startsWith);
     }
 
     private void reject(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
