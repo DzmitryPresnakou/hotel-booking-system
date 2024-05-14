@@ -1,7 +1,7 @@
-package com.presnakov.hotelBookingSystem.servlet;
+package com.presnakov.hotelBookingSystem.servlet.rooms;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
-import com.presnakov.hotelBookingSystem.service.RoomService;
+import com.presnakov.hotelBookingSystem.service.RoomOrderService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,17 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/rooms")
-public class RoomServlet extends HttpServlet {
+@WebServlet("/orders")
+public class RoomOrdersServlet extends HttpServlet {
 
-    private final RoomService roomService = RoomService.getInstance();
+    private final RoomOrderService roomOrderService = RoomOrderService.getInstance();
     private final String CONTENT_TYPE = "text/html";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
-        req.setAttribute("rooms", roomService.findAll());
-        req.getRequestDispatcher(JspHelper.getPath("rooms"))
+        req.setAttribute("orders", roomOrderService.findAll());
+        req.getRequestDispatcher(JspHelper.getPath("orders"))
                 .forward(req, resp);
     }
 }

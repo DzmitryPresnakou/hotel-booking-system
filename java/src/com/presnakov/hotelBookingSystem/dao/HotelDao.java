@@ -37,6 +37,9 @@ public class HotelDao implements Dao<Integer, Hotel> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_NAME_SQL = FIND_ALL_SQL + """
+            WHERE name = ?
+            """;
     private static final String ID = "id";
     private static final String NAME = "name";
 
@@ -107,6 +110,21 @@ public class HotelDao implements Dao<Integer, Hotel> {
             return Optional.ofNullable(hotel);
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Hotel with id %s not found", id), throwables);
+        }
+    }
+
+    public Optional<Hotel> findByName(String name) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_NAME_SQL)) {
+            preparedStatement.setString(1, name);
+            var resultSet = preparedStatement.executeQuery();
+            Hotel hotel = null;
+            if (resultSet.next()) {
+                hotel = buildHotel(resultSet);
+            }
+            return Optional.ofNullable(hotel);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Hotel with name %s not found", name), throwables);
         }
     }
 

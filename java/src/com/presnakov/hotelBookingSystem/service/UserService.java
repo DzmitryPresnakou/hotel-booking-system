@@ -58,9 +58,7 @@ public class UserService {
 
     public List<UserCompleteDto> findAll() {
         return userDao.findAll().stream()
-                .map(user -> getBuilder(user)
-                        .isActive(user.getIsActive())
-                        .build())
+                .map(UserService::getBuilder)
                 .collect(toList());
     }
 
@@ -73,19 +71,15 @@ public class UserService {
 
     public UserCompleteDto getUser(Integer id) {
         Optional<User> user = userDao.findById(id);
-        return user.map(value -> getBuilder(value)
-                .isActive(value.getIsActive())
-                .build()).orElse(null);
+        return user.map(UserService::getBuilder).orElse(null);
     }
 
     public UserCompleteDto getUserByEmail(String email) {
         Optional<User> user = userDao.findByEmail(email);
-        return user.map(value -> getBuilder(value)
-                .isActive(value.getIsActive())
-                .build()).orElse(null);
+        return user.map(UserService::getBuilder).orElse(null);
     }
 
-    private static UserCompleteDto.UserCompleteDtoBuilder getBuilder(User user) {
+    private static UserCompleteDto getBuilder(User user) {
         return UserCompleteDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
@@ -95,6 +89,8 @@ public class UserService {
                 .userRoleDto(UserRoleDto.builder()
                         .id(user.getUserRole().getId())
                         .userRoleEnum(user.getUserRole().getUserRoleEnum())
-                        .build());
+                        .build())
+                .isActive(user.getIsActive())
+                .build();
     }
 }

@@ -177,7 +177,6 @@ public class RoomDao implements Dao<Integer, Room> {
             preparedStatement.setInt(4, room.getHotel().getId());
 
             preparedStatement.executeUpdate();
-
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 room.setId(generatedKeys.getInt(ID));

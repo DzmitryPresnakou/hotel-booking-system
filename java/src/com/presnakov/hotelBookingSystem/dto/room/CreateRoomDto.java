@@ -5,9 +5,10 @@ import lombok.Value;
 
 @Value
 @Builder
-public class RoomOrderDto {
-
+public class CreateRoomDto {
     Integer id;
-    Integer roomId;
-    Integer orderStatusId;
+    Integer occupancy;
+    Integer roomClassDto;
+    Integer roomStatusDto;
+    Integer hotelDto;
 }

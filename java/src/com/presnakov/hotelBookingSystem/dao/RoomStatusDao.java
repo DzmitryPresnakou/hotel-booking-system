@@ -1,6 +1,7 @@
 package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
+import com.presnakov.hotelBookingSystem.entity.RoomClass;
 import com.presnakov.hotelBookingSystem.entity.RoomStatus;
 import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
@@ -37,6 +38,9 @@ public class RoomStatusDao implements Dao<Integer, RoomStatus> {
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
+            """;
+    private static final String FIND_BY_STATUS_SQL = FIND_ALL_SQL + """
+            WHERE room_status = ?
             """;
     private static final String ID = "id";
     private static final String ROOM_STATUS = "room_status";
@@ -108,6 +112,21 @@ public class RoomStatusDao implements Dao<Integer, RoomStatus> {
             return Optional.ofNullable(roomStatus);
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room Status with id %s not found", id), throwables);
+        }
+    }
+
+    public Optional<RoomStatus> findByStatus(String status) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_STATUS_SQL)) {
+            preparedStatement.setString(1, status);
+            var resultSet = preparedStatement.executeQuery();
+            RoomStatus roomStatus = null;
+            if (resultSet.next()) {
+                roomStatus = buildRoomStatus(resultSet);
+            }
+            return Optional.ofNullable(roomStatus);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room Class with status %s not found", status), throwables);
         }
     }
 

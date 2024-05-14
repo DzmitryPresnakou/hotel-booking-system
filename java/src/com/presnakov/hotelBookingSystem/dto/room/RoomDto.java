@@ -5,7 +5,6 @@ import lombok.*;
 @Value
 @Builder
 public class RoomDto {
-
     Integer id;
     String description;
 }
