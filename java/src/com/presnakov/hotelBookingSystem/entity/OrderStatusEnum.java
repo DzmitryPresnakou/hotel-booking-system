@@ -4,5 +4,5 @@ public enum OrderStatusEnum {
     OPEN,
     CLOSED,
     APPROVED,
-    REJECTED;
+    REJECTED
 }

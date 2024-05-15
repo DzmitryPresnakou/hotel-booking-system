@@ -37,6 +37,7 @@
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.room.class"/>: ${fn:toLowerCase(deletedRoom.roomClassDto.comfortClass)}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
+
                                                 key="page.rooms.room.price"/>:
                                             <fmt:setLocale value="en_US"/>
                                             <fmt:formatNumber value="${deletedRoom.roomClassDto.pricePerDay}"

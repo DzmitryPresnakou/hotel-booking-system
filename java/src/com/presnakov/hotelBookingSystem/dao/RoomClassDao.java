@@ -71,7 +71,7 @@ public class RoomClassDao implements Dao<Integer, RoomClass> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, String.valueOf(roomClass.getComfortClass()));
-            preparedStatement.setDouble(2, roomClass.getPricePerDay());
+            preparedStatement.setBigDecimal(2, roomClass.getPricePerDay());
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
@@ -149,11 +149,19 @@ public class RoomClassDao implements Dao<Integer, RoomClass> {
         }
     }
 
+//    private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
+//        return new RoomClass(
+//                resultSet.getInt(ID),
+//                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)),
+//                resultSet.getBigDecimal(PRICE_PER_DAY)
+//        );
+//    }
+
     private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
-        return new RoomClass(
-                resultSet.getInt(ID),
-                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class).toUpperCase()),
-                resultSet.getDouble(PRICE_PER_DAY)
-        );
+        return RoomClass.builder()
+                .id(resultSet.getInt(ID))
+                .comfortClass(RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)))
+                .pricePerDay(resultSet.getBigDecimal(PRICE_PER_DAY))
+                .build();
     }
 }
