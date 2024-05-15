@@ -15,7 +15,6 @@
     <title><fmt:message key="page.rooms.title"/></title>
 </head>
 <body>
-
 <div class="container py-5">
     <div class="row text-center mb-5">
         <div class="col-lg-7 mx-auto">
@@ -24,7 +23,6 @@
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-
             <c:choose>
                 <c:when test="${requestScope.isDeleted}">
                     <div class="list-group-item">
@@ -48,14 +46,11 @@
                                                 key="page.rooms.room.status"/>: ${fn:toLowerCase(deletedRoom.roomStatusDto.roomStatusEnum)}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.hotel"/>: ${deletedRoom.hotelDto.name}</p>
-
                                     </div>
                                 </div>
                             </div>
                         </c:if>
-
                         <c:url value="/rooms" var="inputURL">
-                            <%-- <c:param name="id" value="${user.id}"/>--%>
                         </c:url>
                         <a href="${inputURL}">
                             <button type="button" class="btn btn-info"><fmt:message
@@ -64,7 +59,6 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-
                     <ul class="list-group shadow">
                         <c:forEach var="room" items="${requestScope.rooms}">
                             <li class="list-group-item">
@@ -112,20 +106,8 @@
                     </div>
                 </c:otherwise>
             </c:choose>
-
         </div>
-
     </div>
 </div>
-
-
-<%--<h1><fmt:message key="page.rooms.title"/></h1>--%>
-<%--<ul>--%>
-<%--    <c:forEach var="room" items="${requestScope.rooms}">--%>
-<%--        <li>${fn:toLowerCase(room.description)}</li>--%>
-<%--    </c:forEach>--%>
-<%--</ul>--%>
-
-
 </body>
 </html>

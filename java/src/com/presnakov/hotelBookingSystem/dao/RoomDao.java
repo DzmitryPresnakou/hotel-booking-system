@@ -161,7 +161,6 @@ public class RoomDao implements Dao<Integer, Room> {
             preparedStatement.setInt(3, room.getRoomStatus().getId());
             preparedStatement.setInt(4, room.getHotel().getId());
             preparedStatement.setInt(5, room.getId());
-
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room with id %s not found", room.getId()), throwables.getCause());
@@ -175,7 +174,6 @@ public class RoomDao implements Dao<Integer, Room> {
             preparedStatement.setInt(2, room.getRoomClass().getId());
             preparedStatement.setInt(3, room.getRoomStatus().getId());
             preparedStatement.setInt(4, room.getHotel().getId());
-
             preparedStatement.executeUpdate();
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {

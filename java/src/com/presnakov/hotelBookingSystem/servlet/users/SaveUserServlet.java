@@ -29,6 +29,7 @@ public class SaveUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
+
         Integer id = Integer.valueOf(req.getParameter("id"));
         UserCompleteDto userCompleteDto = userService.getUser(id);
         req.setAttribute("user", userCompleteDto);
