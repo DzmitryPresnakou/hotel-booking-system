@@ -6,12 +6,15 @@ import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomClassDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomStatusDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 import com.presnakov.hotelBookingSystem.entity.Room;
+import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.mapper.CreateRoomMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -27,6 +30,11 @@ public class RoomService {
         return roomDao.findAll().stream()
                 .map(RoomService::getRoomCompleteDto)
                 .collect(toList());
+    }
+
+    public RoomCompleteDto getRoom(Integer id) {
+        Optional<Room> room = roomDao.findById(id);
+        return room.map(RoomService::getRoomCompleteDto).orElse(null);
     }
 
     public Integer create(CreateRoomDto createRoomDto) {

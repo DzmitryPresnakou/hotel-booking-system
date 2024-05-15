@@ -58,7 +58,7 @@ public class UserService {
 
     public List<UserCompleteDto> findAll() {
         return userDao.findAll().stream()
-                .map(UserService::getBuilder)
+                .map(UserService::getUserCompleteDto)
                 .collect(toList());
     }
 
@@ -71,15 +71,15 @@ public class UserService {
 
     public UserCompleteDto getUser(Integer id) {
         Optional<User> user = userDao.findById(id);
-        return user.map(UserService::getBuilder).orElse(null);
+        return user.map(UserService::getUserCompleteDto).orElse(null);
     }
 
     public UserCompleteDto getUserByEmail(String email) {
         Optional<User> user = userDao.findByEmail(email);
-        return user.map(UserService::getBuilder).orElse(null);
+        return user.map(UserService::getUserCompleteDto).orElse(null);
     }
 
-    private static UserCompleteDto getBuilder(User user) {
+    private static UserCompleteDto getUserCompleteDto(User user) {
         return UserCompleteDto.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())

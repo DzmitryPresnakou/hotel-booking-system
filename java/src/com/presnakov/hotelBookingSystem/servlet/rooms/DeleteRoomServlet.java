@@ -1,6 +1,7 @@
 package com.presnakov.hotelBookingSystem.servlet.rooms;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
+import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
 import com.presnakov.hotelBookingSystem.service.RoomService;
 
 import javax.servlet.ServletException;
@@ -20,7 +21,9 @@ public class DeleteRoomServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         Integer id = Integer.valueOf(req.getParameter("id"));
+        RoomCompleteDto deletedRoom = roomService.getRoom(id);
         req.setAttribute("isDeleted", roomService.deleteRoom(id));
+        req.setAttribute("deletedRoom", deletedRoom);
         req.getRequestDispatcher(JspHelper.getPath("rooms"))
                 .include(req, resp);
     }
