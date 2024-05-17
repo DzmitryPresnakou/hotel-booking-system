@@ -1,11 +1,16 @@
 package com.presnakov.hotelBookingSystem.service;
 
 import com.presnakov.hotelBookingSystem.dao.RoomOrderDao;
+import com.presnakov.hotelBookingSystem.dto.order.CreateOrderDto;
 import com.presnakov.hotelBookingSystem.dto.order.OrderStatusDto;
 import com.presnakov.hotelBookingSystem.dto.order.PaymentStatusDto;
 import com.presnakov.hotelBookingSystem.dto.order.RoomOrderCompleteDto;
+import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.dto.user.UserDto;
+import com.presnakov.hotelBookingSystem.entity.Room;
 import com.presnakov.hotelBookingSystem.entity.RoomOrder;
+import com.presnakov.hotelBookingSystem.mapper.CreateRoomMapper;
+import com.presnakov.hotelBookingSystem.mapper.CreateRoomOrderMapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +25,7 @@ public class RoomOrderService {
 
     private final RoomOrderDao roomOrderDao = RoomOrderDao.getInstance();
     private final RoomService roomService = RoomService.getInstance();
+    private final CreateRoomOrderMapper createRoomOrderMapper = CreateRoomOrderMapper.getInstance();
 
     public List<RoomOrderCompleteDto> findAllByRoomId(Integer roomId) {
         return roomOrderDao.findAllByRoomId(roomId).stream()
@@ -47,6 +53,12 @@ public class RoomOrderService {
                         .checkOutDate(roomOrder.getCheckOutDate())
                         .build())
                 .collect(toList());
+    }
+
+    public Integer create(CreateOrderDto createOrderDto) {
+        RoomOrder roomOrderEntity = createRoomMapper.mapFrom(createRoomDto);
+        roomDao.save(roomEntity);
+        return roomEntity.getId();
     }
 
     private static OrderStatusDto getOrderStatusDto(RoomOrder roomOrder) {
