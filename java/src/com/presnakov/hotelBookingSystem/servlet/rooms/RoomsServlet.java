@@ -1,6 +1,7 @@
 package com.presnakov.hotelBookingSystem.servlet.rooms;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
+import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.service.RoomService;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @WebServlet("/rooms")
 public class RoomsServlet extends HttpServlet {
@@ -20,6 +22,7 @@ public class RoomsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         req.setAttribute("rooms", roomService.findAll());
+        req.setAttribute("roomStatus", RoomStatusEnum.AVAILABLE);
         req.getRequestDispatcher(JspHelper.getPath("rooms"))
                 .forward(req, resp);
     }

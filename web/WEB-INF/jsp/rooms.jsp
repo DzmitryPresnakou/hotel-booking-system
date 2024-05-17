@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="${pageContext.request.contextPath}css/products.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}css/style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript"
@@ -93,6 +93,16 @@
                                             <button type="button" class="btn btn-info"><fmt:message
                                                     key="page.rooms.edit.button"/></button>
                                         </a>
+
+                                        <c:if test="${room.roomStatusDto.roomStatusEnum.equals(requestScope.roomStatus)}">
+                                            <c:url value="${pageContext.request.contextPath}book-room" var="bookURL">
+                                                <c:param name="id" value="${room.id}"/>
+                                            </c:url>
+                                            <a href="${bookURL}">
+                                                <button type="button" class="btn btn-success"><fmt:message
+                                                        key="page.rooms.book.button"/></button>
+                                            </a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </li>
