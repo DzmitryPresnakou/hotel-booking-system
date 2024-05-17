@@ -5,6 +5,7 @@ import com.presnakov.hotelBookingSystem.dto.user.UserDto;
 import lombok.Builder;
 import lombok.Value;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Value
@@ -15,6 +16,6 @@ public class RoomOrderCompleteDto {
     RoomCompleteDto roomCompleteDto;
     OrderStatusDto orderStatusDto;
     PaymentStatusDto paymentStatusDto;
-    LocalDateTime checkInDate;
-    LocalDateTime checkOutDate;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
 }

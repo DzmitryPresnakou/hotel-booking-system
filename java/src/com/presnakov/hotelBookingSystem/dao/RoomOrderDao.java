@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,8 +106,8 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
                         resultSet.getStatement().getConnection()).orElse(null),
                 paymentStatusDao.findById(resultSet.getInt(PAYMENT_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getObject(CHECK_IN_DATE, LocalDateTime.class),
-                resultSet.getObject(CHECK_OUT_DATE, LocalDateTime.class)
+                resultSet.getObject(CHECK_IN_DATE, LocalDate.class),
+                resultSet.getObject(CHECK_OUT_DATE, LocalDate.class)
         );
     }
 
