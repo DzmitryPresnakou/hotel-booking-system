@@ -1,10 +1,7 @@
 package com.presnakov.hotelBookingSystem.service;
 
-import com.presnakov.hotelBookingSystem.dao.OrderStatusDao;
 import com.presnakov.hotelBookingSystem.dao.PaymentStatusDao;
-import com.presnakov.hotelBookingSystem.dto.order.OrderStatusDto;
 import com.presnakov.hotelBookingSystem.dto.order.PaymentStatusDto;
-import com.presnakov.hotelBookingSystem.entity.OrderStatus;
 import com.presnakov.hotelBookingSystem.entity.PaymentStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,11 +20,10 @@ public class PaymentStatusService {
 
     public PaymentStatusDto findById(Integer paymentId) {
         Optional<PaymentStatus> paymentStatus = paymentStatusDao.findById(paymentId);
-        PaymentStatusDto paymentStatusDto = PaymentStatusDto.builder()
+        return PaymentStatusDto.builder()
                 .id(paymentStatus.get().getId())
                 .paymentStatusEnum(paymentStatus.get().getPaymentStatusEnum())
                 .build();
-        return paymentStatusDto;
     }
 
     public PaymentStatusDto findByStatus(String status) {

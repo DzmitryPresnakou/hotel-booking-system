@@ -3,13 +3,12 @@ package com.presnakov.hotelBookingSystem.servlet.rooms;
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
-import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
-import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
 import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
-import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
-import com.presnakov.hotelBookingSystem.exception.ValidationException;
-import com.presnakov.hotelBookingSystem.service.*;
+import com.presnakov.hotelBookingSystem.service.HotelService;
+import com.presnakov.hotelBookingSystem.service.RoomClassService;
+import com.presnakov.hotelBookingSystem.service.RoomService;
+import com.presnakov.hotelBookingSystem.service.RoomStatusService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.ROOMS;
-import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.USERS;
 
 @WebServlet("/save-room")
 public class SaveRoomServlet extends HttpServlet {

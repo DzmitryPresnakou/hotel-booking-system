@@ -2,12 +2,13 @@ package com.presnakov.hotelBookingSystem.servlet.rooms;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.order.CreateOrderDto;
-import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
-import com.presnakov.hotelBookingSystem.dto.user.UserDto;
 import com.presnakov.hotelBookingSystem.exception.ValidationException;
-import com.presnakov.hotelBookingSystem.service.*;
+import com.presnakov.hotelBookingSystem.service.OrderStatusService;
+import com.presnakov.hotelBookingSystem.service.PaymentStatusService;
+import com.presnakov.hotelBookingSystem.service.RoomOrderService;
+import com.presnakov.hotelBookingSystem.service.RoomService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.PLACE_ORDER;
-import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.ROOMS;
 
 @WebServlet("/book-room")
 public class BookRoomServlet extends HttpServlet {
@@ -45,22 +45,23 @@ public class BookRoomServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType(CONTENT_TYPE);
+
+        UserCompleteDto userCompleteDto = (UserCompleteDto) req.getSession().getAttribute("user");
+        Integer id = Integer.valueOf(req.getParameter("id"));
+
+        RoomCompleteDto roomCompleteDto = roomService.getRoom(id);
+        CreateOrderDto createOrderDto = CreateOrderDto.builder()
+                .id(id)
+                .user(userCompleteDto.getId())
+                .room(roomCompleteDto.getId())
+                .orderStatus(orderStatusService.findByStatus(ORDER_STATUS_OPEN).getId())
+                .paymentStatus(paymentStatusService.findByStatus(PAYMENT_STATUS_DECLINED).getId())
+                .checkInDate(req.getParameter("checkInDate"))
+                .checkOutDate(req.getParameter("checkOutDate"))
+                .build();
         try {
-            UserCompleteDto userCompleteDto = (UserCompleteDto) req.getSession().getAttribute("user");
-            Integer id = Integer.valueOf(req.getParameter("id"));
-
-            RoomCompleteDto roomCompleteDto = roomService.getRoom(id);
-            CreateOrderDto createOrderDto = CreateOrderDto.builder()
-                    .id(id)
-                    .user(userCompleteDto.getId())
-                    .room(roomCompleteDto.getId())
-                    .orderStatus(orderStatusService.findByStatus(ORDER_STATUS_OPEN).getId())
-                    .paymentStatus(paymentStatusService.findByStatus(PAYMENT_STATUS_DECLINED).getId())
-                    .checkInDate(req.getParameter("checkInDate"))
-                    .checkOutDate(req.getParameter("checkOutDate"))
-                    .build();
             roomOrderService.create(createOrderDto);
-
+            //это передать на страницу подтверждения заказа и оплату - PLACE_ORDER
 //        CreateRoomDto createRoomDto = CreateRoomDto.builder()
 //                .occupancy(roomCompleteDto.getOccupancy())
 //                .roomClassDto(roomCompleteDto.getRoomClassDto().getId())

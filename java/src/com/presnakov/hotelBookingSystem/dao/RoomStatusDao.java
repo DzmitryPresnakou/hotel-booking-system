@@ -1,7 +1,6 @@
 package com.presnakov.hotelBookingSystem.dao;
 
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
-import com.presnakov.hotelBookingSystem.entity.RoomClass;
 import com.presnakov.hotelBookingSystem.entity.RoomStatus;
 import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.exception.DaoException;
