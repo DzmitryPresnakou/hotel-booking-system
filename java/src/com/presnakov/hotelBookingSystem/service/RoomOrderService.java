@@ -7,7 +7,10 @@ import com.presnakov.hotelBookingSystem.dto.order.PaymentStatusDto;
 import com.presnakov.hotelBookingSystem.dto.order.RoomOrderCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.user.UserDto;
 import com.presnakov.hotelBookingSystem.entity.RoomOrder;
+import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateRoomOrderMapper;
+import com.presnakov.hotelBookingSystem.validator.CreateRoomOrderValidator;
+import com.presnakov.hotelBookingSystem.validator.ValidationResult;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,21 +25,8 @@ public class RoomOrderService {
 
     private final RoomOrderDao roomOrderDao = RoomOrderDao.getInstance();
     private final RoomService roomService = RoomService.getInstance();
+    private final CreateRoomOrderValidator createRoomOrderValidator = CreateRoomOrderValidator.getInstance();
     private final CreateRoomOrderMapper createRoomOrderMapper = CreateRoomOrderMapper.getInstance();
-
-    public List<RoomOrderCompleteDto> findAllByRoomId(Integer roomId) {
-        return roomOrderDao.findAllByRoomId(roomId).stream()
-                .map(roomOrder -> RoomOrderCompleteDto.builder()
-                        .id(roomOrder.getId())
-                        .userDto(getUserDto(roomOrder))
-                        .roomCompleteDto(roomService.getRoom(roomOrder.getRoom().getId()))
-                        .orderStatusDto(getOrderStatusDto(roomOrder))
-                        .paymentStatusDto(getPaymentStatusDto(roomOrder))
-                        .checkInDate(roomOrder.getCheckInDate())
-                        .checkOutDate(roomOrder.getCheckOutDate())
-                        .build())
-                .collect(toList());
-    }
 
     public List<RoomOrderCompleteDto> findAll() {
         return roomOrderDao.findAll().stream()
@@ -53,6 +43,10 @@ public class RoomOrderService {
     }
 
     public Integer create(CreateOrderDto createOrderDto) {
+        ValidationResult validationResult = createRoomOrderValidator.isValid(createOrderDto);
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult.getErrors());
+        }
         RoomOrder roomOrderEntity = createRoomOrderMapper.mapFrom(createOrderDto);
         roomOrderDao.save(roomOrderEntity);
         return roomOrderEntity.getId();

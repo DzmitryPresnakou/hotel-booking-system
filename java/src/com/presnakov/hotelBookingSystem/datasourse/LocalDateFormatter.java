@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 @UtilityClass
 public class LocalDateFormatter {
@@ -18,10 +19,11 @@ public class LocalDateFormatter {
 
     public boolean isValid(String date) {
         try {
-            format(date);
-            return true;
+            return Optional.ofNullable(date)
+                    .map(LocalDateFormatter::format)
+                    .isEmpty();
         } catch (DateTimeParseException exception) {
-            return false;
+            return true;
         }
     }
 }
