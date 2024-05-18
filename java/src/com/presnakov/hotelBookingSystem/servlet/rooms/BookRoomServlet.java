@@ -2,11 +2,9 @@ package com.presnakov.hotelBookingSystem.servlet.rooms;
 
 import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.order.CreateOrderDto;
-import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
+import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.user.UserDto;
-import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
-import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
 import com.presnakov.hotelBookingSystem.service.*;
 
 import javax.servlet.ServletException;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.ROOMS;
 
@@ -27,6 +24,7 @@ public class BookRoomServlet extends HttpServlet {
     private final OrderStatusService orderStatusService = OrderStatusService.getInstance();
     private final PaymentStatusService paymentStatusService = PaymentStatusService.getInstance();
     private final RoomOrderService roomOrderService = RoomOrderService.getInstance();
+    private final UserService userService = UserService.getInstance();
 
     private final String CONTENT_TYPE = "text/html";
     private final String ORDER_STATUS_OPEN = "OPEN";
@@ -45,19 +43,19 @@ public class BookRoomServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(CONTENT_TYPE);
-        UserDto user = (UserDto)req.getSession().getAttribute("user");
+        UserCompleteDto userCompleteDto = (UserCompleteDto) req.getSession().getAttribute("user");
         Integer id = Integer.valueOf(req.getParameter("id"));
+
         RoomCompleteDto roomCompleteDto = roomService.getRoom(id);
         CreateOrderDto createOrderDto = CreateOrderDto.builder()
                 .id(id)
-                .user(user.getId())
+                .user(userCompleteDto.getId())
                 .room(roomCompleteDto.getId())
                 .orderStatus(orderStatusService.findByStatus(ORDER_STATUS_OPEN).getId())
                 .paymentStatus(paymentStatusService.findByStatus(PAYMENT_STATUS_OPEN).getId())
                 .checkInDate(req.getParameter("checkInDate"))
                 .checkOutDate(req.getParameter("checkOutDate"))
                 .build();
-
         roomOrderService.create(createOrderDto);
         resp.sendRedirect(ROOMS);
     }
