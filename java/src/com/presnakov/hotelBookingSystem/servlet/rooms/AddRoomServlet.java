@@ -4,6 +4,7 @@ import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.room.CreateRoomDto;
 import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
 import com.presnakov.hotelBookingSystem.entity.RoomStatusEnum;
+import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.service.HotelService;
 import com.presnakov.hotelBookingSystem.service.RoomClassService;
 import com.presnakov.hotelBookingSystem.service.RoomService;
@@ -42,13 +43,20 @@ public class AddRoomServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         CreateRoomDto roomDto = CreateRoomDto.builder()
-                .occupancy(Integer.valueOf(req.getParameter("occupancy")))
+                .occupancy(req.getParameter("occupancy").isBlank() ?
+                        null :
+                        Integer.valueOf(req.getParameter("occupancy")))
                 .roomClassDto(roomClassService.findByClass(req.getParameter("roomClass")).getId())
                 .roomStatusDto(roomStatusService.findByStatus(req.getParameter("roomStatus")).getId())
                 .hotelDto(hotelService.findByName(req.getParameter("hotel")).getId())
                 .build();
-        roomService.create(roomDto);
-        req.setAttribute("isCreate", true);
-        resp.sendRedirect(ROOMS);
+        try {
+            roomService.create(roomDto);
+            req.setAttribute("isCreate", true);
+            resp.sendRedirect(ROOMS);
+        } catch (ValidationException exception) {
+            req.setAttribute("errors", exception.getErrors());
+            doGet(req, resp);
+        }
     }
 }

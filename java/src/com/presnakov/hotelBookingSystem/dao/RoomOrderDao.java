@@ -61,6 +61,7 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
             """;
     private static final String FIND_BY_USER_ID_SQL = FIND_ALL_SQL + """
             WHERE user_id = ?
+            AND order_status_id != ?;
             """;
     private static final String ID = "id";
     private static final String USER_ID = "user_id";
@@ -101,6 +102,7 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
             preparedStatement.setObject(1, userId);
+            preparedStatement.setObject(2, 4);
             var resultSet = preparedStatement.executeQuery();
             List<RoomOrder> roomOrders = new ArrayList<>();
             while (resultSet.next()) {

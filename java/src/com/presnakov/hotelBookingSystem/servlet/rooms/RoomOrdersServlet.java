@@ -4,7 +4,6 @@ import com.presnakov.hotelBookingSystem.datasourse.JspHelper;
 import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
 import com.presnakov.hotelBookingSystem.service.RoomOrderService;
-import com.presnakov.hotelBookingSystem.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +32,6 @@ public class RoomOrdersServlet extends HttpServlet {
         } else {
             req.setAttribute("isAdmin", false);
             req.setAttribute("orders", roomOrderService.findAllByUserId(userDto.getId()));
-//            req.setAttribute("userId", userDto.getId());
         }
         req.getRequestDispatcher(JspHelper.getPath("orders"))
                 .forward(req, resp);

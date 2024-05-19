@@ -33,6 +33,8 @@
                                 <div class="media align-items-lg-center flex-column flex-lg-row p-3">
                                     <div class="media-body order-2 order-lg-1">
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                key="page.rooms.number"/>: ${deletedRoom.id}</p>
+                                        <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.occupancy"/>: ${deletedRoom.occupancy}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.room.class"/>: ${fn:toLowerCase(deletedRoom.roomClassDto.comfortClass)}</p>
@@ -80,22 +82,24 @@
                                                 key="page.rooms.room.status"/>: ${fn:toLowerCase(room.roomStatusDto.roomStatusEnum)}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.hotel"/>: ${room.hotelDto.name}</p>
-                                        <c:url var="deleteUrl"
-                                               value="${pageContext.request.contextPath}rooms/delete">
-                                            <c:param name="id" value="${room.id}"/>
-                                        </c:url>
-                                        <a href="${deleteUrl}">
-                                            <button type="button" class="btn btn-danger"><fmt:message
-                                                    key="page.rooms.delete.button"/></button>
-                                        </a>
-                                        <c:url value="${pageContext.request.contextPath}save-room" var="saveURL">
-                                            <c:param name="id" value="${room.id}"/>
-                                        </c:url>
-                                        <a href="${saveURL}">
-                                            <button type="button" class="btn btn-info"><fmt:message
-                                                    key="page.rooms.edit.button"/></button>
-                                        </a>
-                                        <c:if test="${room.roomStatusDto.roomStatusEnum.equals(requestScope.availableRoom)}">
+                                        <c:if test="${requestScope.isAdmin}">
+                                            <c:url var="deleteUrl"
+                                                   value="${pageContext.request.contextPath}rooms/delete">
+                                                <c:param name="id" value="${room.id}"/>
+                                            </c:url>
+                                            <a href="${deleteUrl}">
+                                                <button type="button" class="btn btn-danger"><fmt:message
+                                                        key="page.rooms.delete.button"/></button>
+                                            </a>
+                                            <c:url value="${pageContext.request.contextPath}save-room" var="saveURL">
+                                                <c:param name="id" value="${room.id}"/>
+                                            </c:url>
+                                            <a href="${saveURL}">
+                                                <button type="button" class="btn btn-info"><fmt:message
+                                                        key="page.rooms.edit.button"/></button>
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${!requestScope.isAdmin && room.roomStatusDto.roomStatusEnum.equals(requestScope.availableRoom)}">
                                             <c:url value="${pageContext.request.contextPath}book-room" var="bookURL">
                                                 <c:param name="id" value="${room.id}"/>
                                             </c:url>
@@ -109,13 +113,16 @@
                             </li>
                         </c:forEach>
                     </ul>
-                    <div class="list-group-item">
-                        <c:url value="${pageContext.request.contextPath}add-room" var="inputURL"/>
-                        <a href="${inputURL}">
-                            <button type="button" class="btn btn-info"><fmt:message
-                                    key="page.rooms.add.room.ref"/></button>
-                        </a>
-                    </div>
+                    <c:if test="${requestScope.isAdmin}">
+                        <div class="list-group-item">
+                            <c:url value="${pageContext.request.contextPath}add-room" var="inputURL"/>
+                            <a href="${inputURL}">
+                                <button type="button" class="btn btn-info"><fmt:message
+                                        key="page.rooms.add.room.ref"/></button>
+                            </a>
+                        </div>
+                    </c:if>
+
                 </c:otherwise>
             </c:choose>
         </div>

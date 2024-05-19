@@ -7,7 +7,10 @@ import com.presnakov.hotelBookingSystem.dto.room.RoomClassDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.room.RoomStatusDto;
 import com.presnakov.hotelBookingSystem.entity.Room;
+import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateRoomMapper;
+import com.presnakov.hotelBookingSystem.validator.CreateRoomValidator;
+import com.presnakov.hotelBookingSystem.validator.ValidationResult;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +25,7 @@ public class RoomService {
     private static final RoomService INSTANCE = new RoomService();
 
     private final RoomDao roomDao = RoomDao.getInstance();
+    private final CreateRoomValidator createRoomValidator = CreateRoomValidator.getInstance();
     private final CreateRoomMapper createRoomMapper = CreateRoomMapper.getInstance();
 
     public List<RoomCompleteDto> findAll() {
@@ -36,6 +40,10 @@ public class RoomService {
     }
 
     public Integer create(CreateRoomDto createRoomDto) {
+        ValidationResult validationResult = createRoomValidator.isValid(createRoomDto);
+        if (!validationResult.isValid()) {
+            throw new ValidationException(validationResult.getErrors());
+        }
         Room roomEntity = createRoomMapper.mapFrom(createRoomDto);
         roomDao.save(roomEntity);
         return roomEntity.getId();

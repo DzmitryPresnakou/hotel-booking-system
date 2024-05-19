@@ -93,6 +93,19 @@ public class RoomOrderService {
         return roomOrderEntity.getId();
     }
 
+    public Integer update(CreateOrderDto createOrderDto) {
+        RoomOrder roomOrderEntity = createRoomOrderMapper.mapFrom(createOrderDto);
+        roomOrderDao.update(roomOrderEntity);
+        return roomOrderEntity.getId();
+    }
+
+    public boolean deleteRoomOrder(Integer id) {
+        if (id < 0) {
+            return false;
+        }
+        return roomOrderDao.delete(id);
+    }
+
     private static OrderStatusDto getOrderStatusDto(RoomOrder roomOrder) {
         return OrderStatusDto.builder()
                 .id(roomOrder.getOrderStatus().getId())

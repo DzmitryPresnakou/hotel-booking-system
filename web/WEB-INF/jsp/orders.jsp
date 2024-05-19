@@ -42,13 +42,28 @@
                                         key="page.orders.room.check.in.date"/>: ${order.checkInDate}</p>
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.check.out.date"/>: ${order.checkOutDate}</p>
-                                <c:url value="${pageContext.request.contextPath}place-order" var="saveURL">
-                                    <c:param name="id" value="${order.id}"/>
-                                </c:url>
-                                <a href="${saveURL}">
-                                    <button type="button" class="btn btn-info"><fmt:message
-                                            key="page.orders.order.button"/></button>
-                                </a>
+                                <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                        key="page.orders.room.status"/>: ${fn:toLowerCase(order.orderStatusDto.orderStatusEnum)}</p>
+
+                                <c:if test="${fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('open')}">
+                                    <c:url value="${pageContext.request.contextPath}place-order" var="orderURL">
+                                        <c:param name="id" value="${order.id}"/>
+                                    </c:url>
+                                    <a href="${orderURL}">
+                                        <button type="button" class="btn btn-info"><fmt:message
+                                                key="page.orders.order.button"/></button>
+                                    </a>
+                                </c:if>
+                                <c:if test="${requestScope.isAdmin}">
+                                    <c:url var="deleteUrl"
+                                           value="${pageContext.request.contextPath}orders/delete">
+                                        <c:param name="id" value="${order.id}"/>
+                                    </c:url>
+                                    <a href="${deleteUrl}">
+                                        <button type="button" class="btn btn-danger"><fmt:message
+                                                key="page.orders.delete.button"/></button>
+                                    </a>
+                                </c:if>
                             </div>
                         </div>
                     </li>

@@ -40,8 +40,24 @@
             <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay * requestScope.period}" type="currency"/>
         </p>
 
-        <button type="submit" class="btn btn-danger" name="order" value="ru_RU"><fmt:message key="page.place-order.submit.button"/></button>
-        <button type="submit" class="btn btn-success" name="cancel" value="en_US"><fmt:message key="page.place-order.cancel.button"/></button>
+
+    <c:url value="${pageContext.request.contextPath}place-order/pay" var="payURL">
+        <c:param name="roomId" value="${requestScope.room.id}"/>
+        <c:param name="orderId" value="${requestScope.order.id}"/>
+    </c:url>
+    <a href="${payURL}">
+        <button type="button" class="btn btn-success"><fmt:message
+                key="page.place-order.submit.button"/></button>
+    </a>
+
+    <c:url value="${pageContext.request.contextPath}place-order/cancel" var="cancelURL">
+        <c:param name="roomId" value="${requestScope.room.id}"/>
+        <c:param name="orderId" value="${requestScope.order.id}"/>
+    </c:url>
+    <a href="${cancelURL}">
+        <button type="button" class="btn btn-danger"><fmt:message
+                key="page.place-order.cancel.button"/></button>
+    </a>
 
         <c:url value="/rooms" var="inputURL">
         </c:url>
