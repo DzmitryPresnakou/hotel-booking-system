@@ -16,13 +16,13 @@ public class RoomsServlet extends HttpServlet {
 
     private final RoomService roomService = RoomService.getInstance();
     private final String CONTENT_TYPE = "text/html";
-    private final RoomStatusEnum ROOM_STATUS = RoomStatusEnum.AVAILABLE;
+    private final RoomStatusEnum ROOM_STATUS_AVAILABLE = RoomStatusEnum.AVAILABLE;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         req.setAttribute("rooms", roomService.findAll());
-        req.setAttribute("roomStatus", ROOM_STATUS);
+        req.setAttribute("availableRoom", ROOM_STATUS_AVAILABLE);
         req.getRequestDispatcher(JspHelper.getPath("rooms"))
                 .forward(req, resp);
     }

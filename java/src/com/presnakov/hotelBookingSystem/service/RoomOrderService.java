@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,6 +31,46 @@ public class RoomOrderService {
 
     public List<RoomOrderCompleteDto> findAll() {
         return roomOrderDao.findAll().stream()
+                .map(roomOrder -> RoomOrderCompleteDto.builder()
+                        .id(roomOrder.getId())
+                        .userDto(getUserDto(roomOrder))
+                        .roomCompleteDto(roomService.getRoom(roomOrder.getRoom().getId()))
+                        .orderStatusDto(getOrderStatusDto(roomOrder))
+                        .paymentStatusDto(getPaymentStatusDto(roomOrder))
+                        .checkInDate(roomOrder.getCheckInDate())
+                        .checkOutDate(roomOrder.getCheckOutDate())
+                        .build())
+                .collect(toList());
+    }
+
+    public RoomOrderCompleteDto findById(Integer roomOrderId) {
+        Optional<RoomOrder> roomOrder = roomOrderDao.findById(roomOrderId);
+        return RoomOrderCompleteDto.builder()
+                .id(roomOrder.get().getId())
+                .userDto(getUserDto(roomOrder.get()))
+                .roomCompleteDto(roomService.getRoom(roomOrder.get().getRoom().getId()))
+                .orderStatusDto(getOrderStatusDto(roomOrder.get()))
+                .paymentStatusDto(getPaymentStatusDto(roomOrder.get()))
+                .checkInDate(roomOrder.get().getCheckInDate())
+                .checkOutDate(roomOrder.get().getCheckOutDate())
+                .build();
+    }
+
+    public RoomOrderCompleteDto findByRoomId(Integer roomOrderId) {
+        Optional<RoomOrder> roomOrder = roomOrderDao.findById(roomOrderId);
+        return RoomOrderCompleteDto.builder()
+                .id(roomOrder.get().getId())
+                .userDto(getUserDto(roomOrder.get()))
+                .roomCompleteDto(roomService.getRoom(roomOrder.get().getRoom().getId()))
+                .orderStatusDto(getOrderStatusDto(roomOrder.get()))
+                .paymentStatusDto(getPaymentStatusDto(roomOrder.get()))
+                .checkInDate(roomOrder.get().getCheckInDate())
+                .checkOutDate(roomOrder.get().getCheckOutDate())
+                .build();
+    }
+
+    public List<RoomOrderCompleteDto> findAllByUserId(Integer userId) {
+        return roomOrderDao.findAllByUserId(userId).stream()
                 .map(roomOrder -> RoomOrderCompleteDto.builder()
                         .id(roomOrder.getId())
                         .userDto(getUserDto(roomOrder))

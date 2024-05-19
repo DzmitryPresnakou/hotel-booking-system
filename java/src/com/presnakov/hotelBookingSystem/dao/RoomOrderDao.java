@@ -59,6 +59,9 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_USER_ID_SQL = FIND_ALL_SQL + """
+            WHERE user_id = ?
+            """;
     private static final String ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ROOM_ID = "room_id";
@@ -83,7 +86,21 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_BY_ROOM_ID)) {
             preparedStatement.setObject(1, roomId);
+            var resultSet = preparedStatement.executeQuery();
+            List<RoomOrder> roomOrders = new ArrayList<>();
+            while (resultSet.next()) {
+                roomOrders.add(buildRoomOrder(resultSet));
+            }
+            return roomOrders;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public List<RoomOrder> findAllByUserId(Integer userId) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
+            preparedStatement.setObject(1, userId);
             var resultSet = preparedStatement.executeQuery();
             List<RoomOrder> roomOrders = new ArrayList<>();
             while (resultSet.next()) {
@@ -155,7 +172,6 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
             preparedStatement.setObject(5, roomOrder.getCheckInDate());
             preparedStatement.setObject(6, roomOrder.getCheckOutDate());
             preparedStatement.setInt(7, roomOrder.getId());
-
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room order with id %s not found", roomOrder.getId()), throwables.getCause());

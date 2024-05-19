@@ -66,6 +66,8 @@
                                 <div class="media align-items-lg-center flex-column flex-lg-row p-3">
                                     <div class="media-body order-2 order-lg-1">
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                                key="page.rooms.number"/>: ${room.id}</p>
+                                        <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.occupancy"/>: ${room.occupancy}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.room.class"/>: ${fn:toLowerCase(room.roomClassDto.comfortClass)}</p>
@@ -93,8 +95,7 @@
                                             <button type="button" class="btn btn-info"><fmt:message
                                                     key="page.rooms.edit.button"/></button>
                                         </a>
-
-                                        <c:if test="${room.roomStatusDto.roomStatusEnum.equals(requestScope.roomStatus)}">
+                                        <c:if test="${room.roomStatusDto.roomStatusEnum.equals(requestScope.availableRoom)}">
                                             <c:url value="${pageContext.request.contextPath}book-room" var="bookURL">
                                                 <c:param name="id" value="${room.id}"/>
                                             </c:url>

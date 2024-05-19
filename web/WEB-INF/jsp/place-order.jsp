@@ -12,45 +12,36 @@
             src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <%@include file="header.jsp" %>
-    <title><fmt:message key="page.book-room.title"/></title>
+    <title><fmt:message key="page.place-order.title"/></title>
 </head>
 <body>
 <div class="list-group-item">
-    <form action="${pageContext.request.contextPath}book-room" method="post">
+    <form action="${pageContext.request.contextPath}place-order" method="post">
 
-        <input type="hidden" name="id" id="roomId" value="${requestScope.room.id}">
+<%--        <input type="hidden" name="id" id="roomId" value="${requestScope.room.id}">--%>
 
-        <p class="mt-0 font-weight-bold mb-2"><fmt:message
-                key="page.book-room.hotel"/>: ${requestScope.room.hotelDto.name}</p>
-        <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.book-room.number"/>: ${requestScope.room.id}</p>
-
-        <p class="mt-0 font-weight-bold mb-2"><fmt:message
-                key="page.book-room.occupancy"/>: ${requestScope.room.occupancy}</p>
+        <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.place-order.hotel"/>: ${requestScope.room.hotelDto.name}</p>
+        <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.place-order.number"/>: ${requestScope.room.id}</p>
 
         <p class="mt-0 font-weight-bold mb-2"><fmt:message
-                key="page.book-room.room.class"/>: ${fn:toLowerCase(requestScope.room.roomClassDto.comfortClass)}</p>
+                key="page.place-order.occupancy"/>: ${requestScope.room.occupancy}</p>
 
         <p class="mt-0 font-weight-bold mb-2"><fmt:message
-                key="page.book-room.room.price"/>:
+                key="page.place-order.room.class"/>: ${fn:toLowerCase(requestScope.room.roomClassDto.comfortClass)}</p>
+
+        <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                key="page.place-order.check.in.date"/>: ${requestScope.order.checkInDate}</p>
+        <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                key="page.place-order.check.out.date"/>: ${requestScope.order.checkOutDate}</p>
+
+        <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                key="page.place-order.room.price"/>:
             <fmt:setLocale value="en_US"/>
-            <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay}" type="currency"/>
+            <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay * requestScope.period}" type="currency"/>
         </p>
 
-        <label class="mt-0 font-weight-bold mb-2" for="checkInDateId"><fmt:message key="page.book-room.check.in.date"/>:
-            <input type="date" name="checkInDate" id="checkInDateId">
-        </label><br>
-
-        <label class="mt-0 font-weight-bold mb-2" for="checkOutDateId"><fmt:message
-                key="page.book-room.check.out.date"/>:
-            <input type="date" name="checkOutDate" id="checkOutDateId">
-        </label><br>
-
-        <button type="submit"><fmt:message key="page.book-room.submit.button"/></button>
-
-        <%--    <c:if test="${not empty requestScope.message}">--%>
-        <%--        <span><h5 style="color: red">${requestScope.message} <fmt:message--%>
-        <%--                key="page.registration.error.message"/></h5></span>--%>
-        <%--    </c:if>--%>
+        <button type="submit" class="btn btn-danger" name="order" value="ru_RU"><fmt:message key="page.place-order.submit.button"/></button>
+        <button type="submit" class="btn btn-success" name="cancel" value="en_US"><fmt:message key="page.place-order.cancel.button"/></button>
 
         <c:url value="/rooms" var="inputURL">
         </c:url>

@@ -12,10 +12,10 @@ import java.util.Set;
 
 import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.*;
 
-@WebFilter(urlPatterns = {"/users/*", "/orders", "/save-user"})
+@WebFilter(urlPatterns = {"/users/*", "/save-user"})
 public class RoleFilter implements Filter {
 
-    private static final Set<String> NONPUBLIC_PATH = Set.of(USERS, ORDERS, SAVE_USER, DELETE_USER);
+    private static final Set<String> NONPUBLIC_PATH = Set.of(USERS, SAVE_USER, DELETE_USER);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

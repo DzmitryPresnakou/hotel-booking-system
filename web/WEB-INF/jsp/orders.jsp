@@ -32,16 +32,23 @@
                                         key="page.orders.user"/>: ${order.userDto.email}</p>
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.description"/></p>
-
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.hotel.name"/>: ${order.roomCompleteDto.hotelDto.name}</p>
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
+                                        key="page.orders.room.number"/>: ${order.roomCompleteDto.id}</p>
+                                <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.occupancy"/>: ${order.roomCompleteDto.occupancy}</p>
-
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.check.in.date"/>: ${order.checkInDate}</p>
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.check.out.date"/>: ${order.checkOutDate}</p>
+                                <c:url value="${pageContext.request.contextPath}place-order" var="saveURL">
+                                    <c:param name="id" value="${order.id}"/>
+                                </c:url>
+                                <a href="${saveURL}">
+                                    <button type="button" class="btn btn-info"><fmt:message
+                                            key="page.orders.order.button"/></button>
+                                </a>
                             </div>
                         </div>
                     </li>
