@@ -11,7 +11,7 @@ public class CreateRoomValidator implements Validator<CreateRoomDto> {
 
         var validationResult = new ValidationResult();
 
-        if (object.getOccupancy() == null) {
+        if (object.getOccupancy() == null || !String.valueOf(object.getOccupancy()).matches("^[1-9]\\d*$")) {
             validationResult.add(Error.of("invalid.occupancy", "Occupancy is invalid"));
         }
         return validationResult;

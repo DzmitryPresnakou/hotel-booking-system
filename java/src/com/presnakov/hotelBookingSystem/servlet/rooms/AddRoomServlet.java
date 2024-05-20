@@ -43,7 +43,8 @@ public class AddRoomServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         CreateRoomDto roomDto = CreateRoomDto.builder()
-                .occupancy(req.getParameter("occupancy").isBlank() ?
+                .occupancy(req.getParameter("occupancy").isBlank()
+                        || !String.valueOf(req.getParameter("occupancy")).matches("^[1-9]\\d*$")?
                         null :
                         Integer.valueOf(req.getParameter("occupancy")))
                 .roomClassDto(roomClassService.findByClass(req.getParameter("roomClass")).getId())

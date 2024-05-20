@@ -122,7 +122,6 @@
                             </a>
                         </div>
                     </c:if>
-
                 </c:otherwise>
             </c:choose>
         </div>

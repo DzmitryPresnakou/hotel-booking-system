@@ -36,19 +36,17 @@
     <c:if test="${not empty requestScope.errors}">
         <div style="color: red">
             <c:forEach var="error" items="${requestScope.errors}">
-                <span>${error.message}</span>
+                <span><fmt:message key="${error.code}"/></span>
             </c:forEach>
         </div>
     </c:if>
 </form>
-
 <div class="list-group-item">
     <c:url value="/users" var="inputURL"/>
     <h5>
         <a href="${inputURL}"><fmt:message key="page.save-user.show.users.ref"/></a>
     </h5>
 </div>
-
 <span><h5 style="color: red">${requestScope.message}</h5></span>
 </body>
 </html>

@@ -47,11 +47,6 @@
 
         <button type="submit"><fmt:message key="page.book-room.submit.button"/></button>
 
-        <%--    <c:if test="${not empty requestScope.message}">--%>
-        <%--        <span><h5 style="color: red">${requestScope.message} <fmt:message--%>
-        <%--                key="page.registration.error.message"/></h5></span>--%>
-        <%--    </c:if>--%>
-
         <c:url value="/rooms" var="inputURL">
         </c:url>
         <a href="${inputURL}">
@@ -62,7 +57,7 @@
         <c:if test="${not empty requestScope.errors}">
             <div style="color: red">
                 <c:forEach var="error" items="${requestScope.errors}">
-                    <span>${error.message}</span>
+                    <span><fmt:message key="${error.code}"/></span>
                 </c:forEach>
             </div>
         </c:if>

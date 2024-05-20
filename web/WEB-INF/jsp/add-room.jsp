@@ -54,16 +54,13 @@
         </a>
 
         <c:if test="${not empty requestScope.errors}">
-        <div style="color: red">
-            <c:forEach var="error" items="${requestScope.errors}">
-                <span>${error.message}</span>
-            </c:forEach>
-        </div>
+            <div style="color: red">
+                <c:forEach var="error" items="${requestScope.errors}">
+                    <span><fmt:message key="${error.code}"/></span>
+                </c:forEach>
+            </div>
         </c:if>
+    </form>
 </div>
-</form>
-<%--<c:if test="${not empty requestScope.message}">--%>
-<%--    <span><h5 style="color: red">${requestScope.message} <fmt:message key="page.add-room.error.message"/></h5></span>--%>
-<%--</c:if>--%>
 </body>
 </html>

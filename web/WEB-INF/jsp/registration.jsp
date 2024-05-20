@@ -26,7 +26,7 @@
     <c:if test="${not empty requestScope.errors}">
         <div style="color: red">
             <c:forEach var="error" items="${requestScope.errors}">
-                <span>${error.message}</span>
+                <span><fmt:message key="${error.code}"/></span>
             </c:forEach>
         </div>
     </c:if>
