@@ -49,15 +49,6 @@
                     </div>
                 </c:if>
             </form>
-            <div class="list-group-item">
-                <c:url value="/users" var="inputURL"/>
-                <h5>
-                    <a href="${inputURL}">
-                        <button type="button" class="btn btn-info">
-                            <fmt:message key="page.save-user.show.users.ref"/></button>
-                    </a>
-                </h5>
-            </div>
             <span><h5 style="color: red">${requestScope.message}</h5></span>
         </div>
     </div>

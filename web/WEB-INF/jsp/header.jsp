@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="${pageContext.request.contextPath}css/style.css" rel="stylesheet">
@@ -18,7 +19,18 @@
         <div class="p-1">
             <c:if test="${not empty sessionScope.user}">
                 <form action="${pageContext.request.contextPath}/logout" method="post">
-                    <button type="submit" class="btn btn-light"><fmt:message key="page.header.logout.button"/></button>
+
+<%--                        ${fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('open')}--%>
+
+                    <c:if test="${fn:toLowerCase(sessionScope.user.userRoleDto.userRoleEnum).equals('admin')}">
+                    <c:url value="/users" var="usersURL">
+                    </c:url>
+                    <a href="${usersURL}">
+                        <button type="button" class="btn btn-light"><fmt:message
+                                key="page.header.users"/></button>
+                    </a>
+                    </c:if>
+
                     <c:url value="/rooms" var="roomsURL">
                     </c:url>
                     <a href="${roomsURL}">
@@ -40,6 +52,7 @@
                                 key="page.header.profile"/></button>
                     </a>
 
+                    <button type="submit" class="btn btn-light"><fmt:message key="page.header.logout.button"/></button>
                 </form>
             </c:if>
         </div>
@@ -50,15 +63,5 @@
 
             </form>
         </div>
-
-        <%--        <div class="p-1">--%>
-        <%--            <c:url value="/rooms" var="inputURL">--%>
-        <%--            </c:url>--%>
-        <%--            <a href="${inputURL}">--%>
-        <%--                <button type="button" class="btn btn-light"><fmt:message--%>
-        <%--                        key="page.rooms.show.rooms.ref"/></button>--%>
-        <%--            </a>--%>
-        <%--        </div>--%>
-
     </nav>
 </div>

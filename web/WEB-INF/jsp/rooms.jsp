@@ -46,12 +46,7 @@
                                 </div>
                             </div>
                         </c:if>
-                        <c:url value="/rooms" var="inputURL">
-                        </c:url>
-                        <a href="${inputURL}">
-                            <button type="button" class="btn btn-info"><fmt:message
-                                    key="page.rooms.show.rooms.ref"/></button>
-                        </a>
+
                     </div>
                 </c:when>
                 <c:otherwise>

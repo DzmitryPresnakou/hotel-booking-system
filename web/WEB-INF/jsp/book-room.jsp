@@ -50,13 +50,6 @@
 
                     <button type="submit"><fmt:message key="page.book-room.submit.button"/></button>
 
-                    <c:url value="/rooms" var="inputURL">
-                    </c:url>
-                    <a href="${inputURL}">
-                        <button type="button" class="btn btn-info"><fmt:message
-                                key="page.rooms.show.rooms.ref"/></button>
-                    </a>
-
                     <c:if test="${not empty requestScope.errors}">
                         <div style="color: red">
                             <c:forEach var="error" items="${requestScope.errors}">

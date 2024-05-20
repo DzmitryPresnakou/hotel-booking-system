@@ -29,12 +29,6 @@
                                 <span><h5><fmt:message key="page.users.not.delete.message"/></h5></span>
                             </div>
                         </c:if>
-                        <c:url value="/users" var="inputURL">
-                            <%-- <c:param name="id" value="${user.id}"/>--%>
-                        </c:url>
-                        <a href="${inputURL}">
-                            <button type="button" class="btn btn-info"><fmt:message key="page.users.show.users.ref"/></button>
-                        </a>
                     </div>
                 </c:when>
                 <c:otherwise>
