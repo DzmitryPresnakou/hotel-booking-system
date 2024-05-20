@@ -40,15 +40,15 @@
 
                     <label class="mt-0 font-weight-bold mb-2" for="checkInDateId"><fmt:message
                             key="page.book-room.check.in.date"/>:
-                        <input type="date" name="checkInDate" id="checkInDateId">
+                        <input type="date" class="form-control" name="checkInDate" id="checkInDateId">
                     </label><br>
 
                     <label class="mt-0 font-weight-bold mb-2" for="checkOutDateId"><fmt:message
                             key="page.book-room.check.out.date"/>:
-                        <input type="date" name="checkOutDate" id="checkOutDateId">
+                        <input type="date" class="form-control" name="checkOutDate" id="checkOutDateId">
                     </label><br>
 
-                    <button type="submit"><fmt:message key="page.book-room.submit.button"/></button>
+                    <button type="submit" class="btn btn-success"><fmt:message key="page.book-room.submit.button"/></button>
 
                     <c:if test="${not empty requestScope.errors}">
                         <div style="color: red">

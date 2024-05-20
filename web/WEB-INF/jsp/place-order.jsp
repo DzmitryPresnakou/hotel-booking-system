@@ -42,7 +42,6 @@
                                           type="currency"/>
                     </p>
 
-
                     <c:url value="${pageContext.request.contextPath}place-order/pay" var="payURL">
                         <c:param name="roomId" value="${requestScope.room.id}"/>
                         <c:param name="orderId" value="${requestScope.order.id}"/>

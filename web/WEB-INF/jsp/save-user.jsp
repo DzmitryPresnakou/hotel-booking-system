@@ -20,26 +20,26 @@
                 <input type="hidden" name="id" id="userId" value="${requestScope.user.id}">
 
                 <label for="firstNameId"><fmt:message key="page.save-user.first.name"/>:
-                    <input type="text" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">
+                    <input type="text" class="form-control" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">
                 </label><br>
                 <label for="lastNameId"><fmt:message key="page.save-user.last.name"/>:
-                    <input type="text" name="lastName" id="lastNameId" value="${requestScope.user.lastName}">
+                    <input type="text" class="form-control" name="lastName" id="lastNameId" value="${requestScope.user.lastName}">
                 </label><br>
                 <label for="emailId"><fmt:message key="page.save-user.email"/>:
-                    <input type="text" name="email" id="emailId" value="${requestScope.user.email}">
+                    <input type="text" class="form-control" name="email" id="emailId" value="${requestScope.user.email}">
                 </label><br>
                 <label for="passwordId"><fmt:message key="page.save-user.password"/>:
-                    <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
+                    <input type="password" class="form-control" name="password" id="passwordId" value="${requestScope.user.password}">
                 </label><br>
 
                 <label for="roleId"><fmt:message key="page.save-user.role"/>:
-                    <select name="role" id="roleId">
+                    <select name="role" class="form-control" id="roleId">
                         <c:forEach var="role" items="${requestScope.roles}">
                             <option value="${role}">${role}</option>
                         </c:forEach>
                     </select>
                 </label><br>
-                <button type="submit"><fmt:message key="page.save-user.submit.button"/></button>
+                <button type="submit" class="btn btn-success"><fmt:message key="page.save-user.submit.button"/></button>
 
                 <c:if test="${not empty requestScope.errors}">
                     <div style="color: red">

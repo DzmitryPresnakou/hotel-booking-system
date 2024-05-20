@@ -21,19 +21,19 @@
                 <input type="hidden" name="role" id="userId" value="${requestScope.user.userRoleDto.userRoleEnum}">
 
                 <label for="firstNameId"><fmt:message key="page.save-profile.first.name"/>:
-                    <input type="text" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">
+                    <input type="text" class="form-control" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">
                 </label><br>
                 <label for="lastNameId"><fmt:message key="page.save-profile.last.name"/>:
-                    <input type="text" name="lastName" id="lastNameId" value="${requestScope.user.lastName}">
+                    <input type="text" class="form-control" name="lastName" id="lastNameId" value="${requestScope.user.lastName}">
                 </label><br>
                 <label for="emailId"><fmt:message key="page.save-profile.email"/>:
-                    <input type="text" name="email" id="emailId" value="${requestScope.user.email}">
+                    <input type="text" class="form-control" name="email" id="emailId" value="${requestScope.user.email}">
                 </label><br>
                 <label for="passwordId"><fmt:message key="page.save-profile.password"/>:
-                    <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
+                    <input type="password" class="form-control" name="password" id="passwordId" value="${requestScope.user.password}">
                 </label><br>
 
-                <button type="submit"><fmt:message key="page.save-profile.submit.button"/></button>
+                <button type="submit" class="btn btn-success"><fmt:message key="page.save-profile.submit.button"/></button>
 
                 <c:if test="${not empty requestScope.errors}">
                     <div style="color: red">

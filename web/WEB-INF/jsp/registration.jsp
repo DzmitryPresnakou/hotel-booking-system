@@ -17,16 +17,16 @@
         <div class="col-lg-8 mx-auto">
             <form action="${pageContext.request.contextPath}/registration" method="post">
                 <label for="firstNameId"><fmt:message key="page.registration.first.name"/>:
-                    <input type="text" name="firstName" id="firstNameId">
+                    <input type="text" class="form-control" name="firstName" id="firstNameId">
                 </label><br>
                 <label for="lastNameId"><fmt:message key="page.registration.last.name"/>:
-                    <input type="text" name="lastName" id="lastNameId">
+                    <input type="text" class="form-control" name="lastName" id="lastNameId">
                 </label><br>
                 <label for="emailId"><fmt:message key="page.registration.email"/>:
-                    <input type="text" name="email" id="emailId">
+                    <input type="text" class="form-control" name="email" id="emailId">
                 </label><br>
                 <label for="passwordId"><fmt:message key="page.registration.password"/>:
-                    <input type="password" name="password" id="passwordId">
+                    <input type="password" class="form-control" name="password" id="passwordId">
                 </label><br>
                 <input type="hidden" name="role" id="roleIdHidden" value="USER">
                 <button type="submit" class="btn btn-success"><fmt:message key="page.registration.submit.button"/></button>

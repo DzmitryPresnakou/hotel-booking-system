@@ -18,11 +18,11 @@
             <div class="list-group-item">
                 <form action="${pageContext.request.contextPath}/add-room" method="post">
                     <label for="occupancyId"><fmt:message key="page.add-room.occupancy"/>:
-                        <input type="text" name="occupancy" id="occupancyId">
+                        <input type="text" class="form-control" name="occupancy" id="occupancyId">
                     </label><br>
 
                     <label for="roomClassId"><fmt:message key="page.add-room.room.class"/>:
-                        <select name="roomClass" id="roomClassId">
+                        <select name="roomClass" class="form-control" id="roomClassId">
                             <c:forEach var="roomClass" items="${requestScope.roomClasses}">
                                 <option value="${roomClass}">${roomClass}</option>
                             </c:forEach>
@@ -30,7 +30,7 @@
                     </label><br>
 
                     <label for="roomStatusId"><fmt:message key="page.add-room.room.status"/>:
-                        <select name="roomStatus" id="roomStatusId">
+                        <select name="roomStatus" class="form-control" id="roomStatusId">
                             <c:forEach var="roomStatus" items="${requestScope.roomStatuses}">
                                 <option value="${roomStatus}">${roomStatus}</option>
                             </c:forEach>
@@ -38,7 +38,7 @@
                     </label><br>
 
                     <label for="hotelId"><fmt:message key="page.add-room.hotel"/>:
-                        <select name="hotel" id="hotelId">
+                        <select name="hotel" class="form-control" id="hotelId">
                             <c:forEach var="hotel" items="${requestScope.hotels}">
                                 <option value="${hotel.name}">${hotel.name}</option>
                             </c:forEach>
