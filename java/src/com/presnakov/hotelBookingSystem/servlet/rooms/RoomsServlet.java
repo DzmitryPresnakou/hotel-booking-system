@@ -31,7 +31,6 @@ public class RoomsServlet extends HttpServlet {
         } else {
             req.setAttribute("isAdmin", false);
         }
-
         req.setAttribute("rooms", roomService.findAll());
         req.setAttribute("availableRoom", ROOM_STATUS_AVAILABLE);
         req.getRequestDispatcher(JspHelper.getPath("rooms"))

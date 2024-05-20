@@ -4,42 +4,36 @@
 <html>
 <head>
     <%@include file="header.jsp" %>
-    <title><fmt:message key="page.save-user.title"/></title>
+    <title><fmt:message key="page.save-profile.title"/></title>
 </head>
 <body>
 <div class="container py-5">
     <div class="row text-center mb-5">
         <div class="col-lg-7 mx-auto">
-            <h1 class="display-4"><fmt:message key="page.save-user.title"/></h1>
+            <h1 class="display-4"><fmt:message key="page.save-profile.title"/></h1>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-8 mx-auto">
-            <form action="${pageContext.request.contextPath}save-user" method="post">
+            <form action="${pageContext.request.contextPath}save-profile" method="post">
                 <input type="hidden" name="isActive" id="isActiveId" value="${requestScope.user.isActive}">
                 <input type="hidden" name="id" id="userId" value="${requestScope.user.id}">
+                <input type="hidden" name="role" id="userId" value="${requestScope.user.userRoleDto.userRoleEnum}">
 
-                <label for="firstNameId"><fmt:message key="page.save-user.first.name"/>:
+                <label for="firstNameId"><fmt:message key="page.save-profile.first.name"/>:
                     <input type="text" name="firstName" id="firstNameId" value="${requestScope.user.firstName}">
                 </label><br>
-                <label for="lastNameId"><fmt:message key="page.save-user.last.name"/>:
+                <label for="lastNameId"><fmt:message key="page.save-profile.last.name"/>:
                     <input type="text" name="lastName" id="lastNameId" value="${requestScope.user.lastName}">
                 </label><br>
-                <label for="emailId"><fmt:message key="page.save-user.email"/>:
+                <label for="emailId"><fmt:message key="page.save-profile.email"/>:
                     <input type="text" name="email" id="emailId" value="${requestScope.user.email}">
                 </label><br>
-                <label for="passwordId"><fmt:message key="page.save-user.password"/>:
+                <label for="passwordId"><fmt:message key="page.save-profile.password"/>:
                     <input type="password" name="password" id="passwordId" value="${requestScope.user.password}">
                 </label><br>
 
-                <label for="roleId"><fmt:message key="page.save-user.role"/>:
-                    <select name="role" id="roleId">
-                        <c:forEach var="role" items="${requestScope.roles}">
-                            <option value="${role}">${role}</option>
-                        </c:forEach>
-                    </select>
-                </label><br>
-                <button type="submit"><fmt:message key="page.save-user.submit.button"/></button>
+                <button type="submit"><fmt:message key="page.save-profile.submit.button"/></button>
 
                 <c:if test="${not empty requestScope.errors}">
                     <div style="color: red">
@@ -49,15 +43,6 @@
                     </div>
                 </c:if>
             </form>
-            <div class="list-group-item">
-                <c:url value="/users" var="inputURL"/>
-                <h5>
-                    <a href="${inputURL}">
-                        <button type="button" class="btn btn-info">
-                            <fmt:message key="page.save-user.show.users.ref"/></button>
-                    </a>
-                </h5>
-            </div>
             <span><h5 style="color: red">${requestScope.message}</h5></span>
         </div>
     </div>
