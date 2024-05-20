@@ -38,7 +38,7 @@
                                 <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                         key="page.orders.room.status"/>: ${fn:toLowerCase(order.orderStatusDto.orderStatusEnum)}</p>
 
-                                <c:if test="${fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('open')}">
+                                <c:if test="${fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('open') && !requestScope.isAdmin}">
                                     <c:url value="${pageContext.request.contextPath}place-order" var="orderURL">
                                         <c:param name="id" value="${order.id}"/>
                                     </c:url>
@@ -47,7 +47,8 @@
                                                 key="page.orders.order.button"/></button>
                                     </a>
                                 </c:if>
-                                <c:if test="${requestScope.isAdmin}">
+                                <c:if test="${(fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('closed')
+                                 || fn:toLowerCase(order.orderStatusDto.orderStatusEnum).equals('rejected')) && requestScope.isAdmin}">
                                     <c:url var="deleteUrl"
                                            value="${pageContext.request.contextPath}orders/delete">
                                         <c:param name="id" value="${order.id}"/>

@@ -11,6 +11,5 @@ public class UrlPath {
     public static final String ROOMS = "/rooms";
     public static final String ORDERS = "/orders";
     public static final String SAVE_USER = "/save-user";
-    public static final String PLACE_ORDER = "/place-order";
     public static final String DELETE_USER = "/users/delete";
 }
