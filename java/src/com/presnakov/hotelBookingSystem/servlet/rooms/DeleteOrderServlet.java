@@ -18,6 +18,8 @@ public class DeleteOrderServlet extends HttpServlet {
 
     private final RoomOrderService roomOrderService = RoomOrderService.getInstance();
     private final String CONTENT_TYPE = "text/html";
+    private final OrderStatusEnum ORDER_STATUS_CLOSED = OrderStatusEnum.CLOSED;
+    private final OrderStatusEnum ORDER_STATUS_REJECTED = OrderStatusEnum.REJECTED;
 
 
     @Override
@@ -26,11 +28,9 @@ public class DeleteOrderServlet extends HttpServlet {
         Integer id = Integer.valueOf(req.getParameter("id"));
         RoomOrderCompleteDto roomOrderCompleteDto = roomOrderService.findById(id);
 
-        if (roomOrderCompleteDto.getOrderStatusDto().getOrderStatusEnum().compareTo(OrderStatusEnum.CLOSED) == 0
-            || roomOrderCompleteDto.getOrderStatusDto().getOrderStatusEnum().compareTo(OrderStatusEnum.REJECTED) == 0) {
+        if (roomOrderCompleteDto.getOrderStatusDto().getOrderStatusEnum().compareTo(ORDER_STATUS_CLOSED) == 0
+            || roomOrderCompleteDto.getOrderStatusDto().getOrderStatusEnum().compareTo(ORDER_STATUS_REJECTED) == 0) {
             req.setAttribute("isDeleted", roomOrderService.deleteRoomOrder(id));
-//            req.getRequestDispatcher(JspHelper.getPath("orders"))
-//                    .include(req, resp);
         } else {
             req.setAttribute("isDeleted", false);
 

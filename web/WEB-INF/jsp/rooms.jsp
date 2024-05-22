@@ -70,7 +70,7 @@
                                                 key="page.rooms.room.status"/>: ${fn:toLowerCase(room.roomStatusDto.roomStatusEnum)}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.hotel"/>: ${room.hotelDto.name}</p>
-                                        <c:if test="${requestScope.isAdmin}">
+                                        <c:if test="${requestScope.isAdmin && room.roomStatusDto.roomStatusEnum.equals(requestScope.availableRoom)}">
                                             <c:url var="deleteUrl"
                                                    value="${pageContext.request.contextPath}rooms/delete">
                                                 <c:param name="id" value="${room.id}"/>
