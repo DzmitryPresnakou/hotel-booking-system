@@ -14,17 +14,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.LOGIN;
+
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
 
     private final UserService userService = UserService.getInstance();
-    private final Integer USER_ROLE_ID = 2;
+    private final Integer USER_ROLE_ID = 1;
     private final String IS_ACTIVE_USER = "true";
+    private final String CONTENT_TYPE = "text/html";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+        resp.setContentType(CONTENT_TYPE);
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
         req.getRequestDispatcher(JspHelper.getPath("registration"))
                 .forward(req, resp);
@@ -32,7 +35,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+        resp.setContentType(CONTENT_TYPE);
         CreateUserDto userDto = CreateUserDto.builder()
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
@@ -45,7 +48,7 @@ public class RegistrationServlet extends HttpServlet {
             if (userService.getUserByEmail(userDto.getEmail()) == null) {
                 userService.create(userDto);
                 req.setAttribute("isCreate", true);
-                resp.sendRedirect("/login");
+                resp.sendRedirect(LOGIN);
             } else {
                 req.setAttribute("isCreate", false);
                 req.setAttribute("message", userDto.getEmail());

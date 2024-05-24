@@ -1,4 +1,5 @@
 package com.presnakov.hotelBookingSystem.dao;
+
 import com.presnakov.hotelBookingSystem.datasourse.ConnectionManager;
 import com.presnakov.hotelBookingSystem.entity.RoomClass;
 import com.presnakov.hotelBookingSystem.entity.RoomClassEnum;
@@ -38,6 +39,10 @@ public class RoomClassDao implements Dao<Integer, RoomClass> {
             """;
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
+            """;
+
+    private static final String FIND_BY_CLASS_SQL = FIND_ALL_SQL + """
+            WHERE class = ?
             """;
     private static final String ID = "id";
     private static final String PRICE_PER_DAY = "price_per_day";
@@ -114,6 +119,21 @@ public class RoomClassDao implements Dao<Integer, RoomClass> {
         }
     }
 
+    public Optional<RoomClass> findByClass(String comfortClass) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_CLASS_SQL)) {
+            preparedStatement.setString(1, comfortClass);
+            var resultSet = preparedStatement.executeQuery();
+            RoomClass roomClass = null;
+            if (resultSet.next()) {
+                roomClass = buildRoomClass(resultSet);
+            }
+            return Optional.ofNullable(roomClass);
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Room Class with comfort class %s not found", comfortClass), throwables);
+        }
+    }
+
     @Override
     public List<RoomClass> findAll() {
         try (var connection = ConnectionManager.get();
@@ -129,11 +149,19 @@ public class RoomClassDao implements Dao<Integer, RoomClass> {
         }
     }
 
+//    private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
+//        return new RoomClass(
+//                resultSet.getInt(ID),
+//                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)),
+//                resultSet.getBigDecimal(PRICE_PER_DAY)
+//        );
+//    }
+
     private RoomClass buildRoomClass(ResultSet resultSet) throws SQLException {
-        return new RoomClass(
-                resultSet.getInt(ID),
-                RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class).toUpperCase()),
-                resultSet.getBigDecimal(PRICE_PER_DAY)
-        );
+        return RoomClass.builder()
+                .id(resultSet.getInt(ID))
+                .comfortClass(RoomClassEnum.valueOf(resultSet.getObject(CLASS, String.class)))
+                .pricePerDay(resultSet.getBigDecimal(PRICE_PER_DAY))
+                .build();
     }
 }

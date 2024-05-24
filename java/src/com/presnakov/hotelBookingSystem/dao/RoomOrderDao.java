@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +59,10 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_USER_ID_SQL = FIND_ALL_SQL + """
+            WHERE user_id = ?
+            AND order_status_id != ?;
+            """;
     private static final String ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ROOM_ID = "room_id";
@@ -83,7 +87,22 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_BY_ROOM_ID)) {
             preparedStatement.setObject(1, roomId);
+            var resultSet = preparedStatement.executeQuery();
+            List<RoomOrder> roomOrders = new ArrayList<>();
+            while (resultSet.next()) {
+                roomOrders.add(buildRoomOrder(resultSet));
+            }
+            return roomOrders;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    public List<RoomOrder> findAllByUserId(Integer userId) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_USER_ID_SQL)) {
+            preparedStatement.setObject(1, userId);
+            preparedStatement.setObject(2, 4);
             var resultSet = preparedStatement.executeQuery();
             List<RoomOrder> roomOrders = new ArrayList<>();
             while (resultSet.next()) {
@@ -106,8 +125,8 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
                         resultSet.getStatement().getConnection()).orElse(null),
                 paymentStatusDao.findById(resultSet.getInt(PAYMENT_STATUS_ID),
                         resultSet.getStatement().getConnection()).orElse(null),
-                resultSet.getObject(CHECK_IN_DATE, LocalDateTime.class),
-                resultSet.getObject(CHECK_OUT_DATE, LocalDateTime.class)
+                resultSet.getObject(CHECK_IN_DATE, LocalDate.class),
+                resultSet.getObject(CHECK_OUT_DATE, LocalDate.class)
         );
     }
 
@@ -155,7 +174,6 @@ public class RoomOrderDao implements Dao<Integer, RoomOrder> {
             preparedStatement.setObject(5, roomOrder.getCheckInDate());
             preparedStatement.setObject(6, roomOrder.getCheckOutDate());
             preparedStatement.setInt(7, roomOrder.getId());
-
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Room order with id %s not found", roomOrder.getId()), throwables.getCause());

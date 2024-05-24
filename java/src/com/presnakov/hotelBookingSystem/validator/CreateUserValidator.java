@@ -9,7 +9,9 @@ public class CreateUserValidator implements Validator<CreateUserDto> {
 
     @Override
     public ValidationResult isValid(CreateUserDto object) {
+
         var validationResult = new ValidationResult();
+
         if (object.getEmail().isBlank()) {
             validationResult.add(Error.of("invalid.email", "Email is invalid"));
         }

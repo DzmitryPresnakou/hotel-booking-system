@@ -38,6 +38,9 @@ public class PaymentStatusDao implements Dao<Integer, PaymentStatus> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_STATUS_SQL = FIND_ALL_SQL + """
+            WHERE payment_status = ?
+            """;
     private static final String ID = "id";
     private static final String PAYMENT_STATUS = "payment_status";
 
@@ -111,7 +114,23 @@ public class PaymentStatusDao implements Dao<Integer, PaymentStatus> {
         }
     }
 
+    public PaymentStatus findByStatus(String status) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_STATUS_SQL)) {
+            preparedStatement.setString(1, status);
+            var resultSet = preparedStatement.executeQuery();
+            PaymentStatus paymentStatus = null;
+            if (resultSet.next()) {
+                paymentStatus = buildPaymentStatus(resultSet);
+            }
+            return paymentStatus;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Payment Status with status %s not found", status), throwables);
+        }
+    }
+
     @Override
+
     public List<PaymentStatus> findAll() {
         try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {

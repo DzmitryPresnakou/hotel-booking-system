@@ -13,20 +13,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
+
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.USERS;
 
 @WebServlet("/save-user")
 public class SaveUserServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
     private final UserRoleService userRoleService = UserRoleService.getInstance();
+    private final String CONTENT_TYPE = "text/html";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+        resp.setContentType(CONTENT_TYPE);
         req.setAttribute("roles", Arrays.stream(UserRoleEnum.values()).toList());
+
         Integer id = Integer.valueOf(req.getParameter("id"));
         UserCompleteDto userCompleteDto = userService.getUser(id);
         req.setAttribute("user", userCompleteDto);
@@ -36,7 +39,7 @@ public class SaveUserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
+        resp.setContentType(CONTENT_TYPE);
         CreateUserDto userDto = CreateUserDto.builder()
                 .id(Integer.valueOf(req.getParameter("id")))
                 .firstName(req.getParameter("firstName"))
@@ -48,7 +51,7 @@ public class SaveUserServlet extends HttpServlet {
                 .build();
         try {
             userService.update(userDto);
-            resp.sendRedirect("/users");
+            resp.sendRedirect(USERS);
         } catch (ValidationException exception) {
             req.setAttribute("errors", exception.getErrors());
             doGet(req, resp);

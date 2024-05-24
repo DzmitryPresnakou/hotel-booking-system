@@ -38,6 +38,9 @@ public class OrderStatusDao implements Dao<Integer, OrderStatus> {
     private static final String FIND_BY_ID_SQL = FIND_ALL_SQL + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_STATUS_SQL = FIND_ALL_SQL + """
+            WHERE order_status = ?
+            """;
     private static final String ID = "id";
     private static final String ORDER_STATUS = "order_status";
 
@@ -108,6 +111,21 @@ public class OrderStatusDao implements Dao<Integer, OrderStatus> {
             return Optional.ofNullable(orderStatus);
         } catch (SQLException throwables) {
             throw new DaoException(String.format("Order Status with id %s not found", id), throwables);
+        }
+    }
+
+    public OrderStatus findByStatus(String status) {
+        try (var connection = ConnectionManager.get();
+             var preparedStatement = connection.prepareStatement(FIND_BY_STATUS_SQL)) {
+            preparedStatement.setString(1, status);
+            var resultSet = preparedStatement.executeQuery();
+            OrderStatus orderStatus = null;
+            if (resultSet.next()) {
+                orderStatus = buildOrderStatus(resultSet);
+            }
+            return orderStatus;
+        } catch (SQLException throwables) {
+            throw new DaoException(String.format("Order Status with status %s not found", status), throwables);
         }
     }
 

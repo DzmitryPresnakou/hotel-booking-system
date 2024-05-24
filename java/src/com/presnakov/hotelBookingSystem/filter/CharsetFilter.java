@@ -1,7 +1,5 @@
 package com.presnakov.hotelBookingSystem.filter;
 
-import jdk.jfr.ContentType;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;

@@ -14,6 +14,10 @@ public class UserMapper implements Mapper<User, UserCompleteDto> {
 
     @Override
     public UserCompleteDto mapFrom(User object) {
+        return buildUser(object);
+    }
+
+    private static UserCompleteDto buildUser(User object) {
         return UserCompleteDto.builder()
                 .id(object.getId())
                 .firstName(object.getFirstName())

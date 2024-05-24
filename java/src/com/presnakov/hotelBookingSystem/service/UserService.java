@@ -58,18 +58,7 @@ public class UserService {
 
     public List<UserCompleteDto> findAll() {
         return userDao.findAll().stream()
-                .map(user -> UserCompleteDto.builder()
-                        .id(user.getId())
-                        .firstName(user.getFirstName())
-                        .lastName(user.getLastName())
-                        .email(user.getEmail())
-                        .password(user.getPassword())
-                        .userRoleDto(UserRoleDto.builder()
-                                .id(user.getUserRole().getId())
-                                .userRoleEnum(user.getUserRole().getUserRoleEnum())
-                                .build())
-                        .isActive(user.getIsActive())
-                        .build())
+                .map(UserService::getUserCompleteDto)
                 .collect(toList());
     }
 
@@ -82,31 +71,26 @@ public class UserService {
 
     public UserCompleteDto getUser(Integer id) {
         Optional<User> user = userDao.findById(id);
-        return user.map(value -> UserCompleteDto.builder()
-                .id(value.getId())
-                .firstName(value.getFirstName())
-                .lastName(value.getLastName())
-                .email(value.getEmail())
-                .password(value.getPassword())
-                .userRoleDto(UserRoleDto.builder()
-                        .userRoleEnum(value.getUserRole().getUserRoleEnum())
-                        .build())
-                .isActive(value.getIsActive())
-                .build()).orElse(null);
+        return user.map(UserService::getUserCompleteDto).orElse(null);
     }
 
     public UserCompleteDto getUserByEmail(String email) {
         Optional<User> user = userDao.findByEmail(email);
-        return user.map(value -> UserCompleteDto.builder()
-                .id(value.getId())
-                .firstName(value.getFirstName())
-                .lastName(value.getLastName())
-                .email(value.getEmail())
-                .password(value.getPassword())
+        return user.map(UserService::getUserCompleteDto).orElse(null);
+    }
+
+    private static UserCompleteDto getUserCompleteDto(User user) {
+        return UserCompleteDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword())
                 .userRoleDto(UserRoleDto.builder()
-                        .userRoleEnum(value.getUserRole().getUserRoleEnum())
+                        .id(user.getUserRole().getId())
+                        .userRoleEnum(user.getUserRole().getUserRoleEnum())
                         .build())
-                .isActive(value.getIsActive())
-                .build()).orElse(null);
+                .isActive(user.getIsActive())
+                .build();
     }
 }

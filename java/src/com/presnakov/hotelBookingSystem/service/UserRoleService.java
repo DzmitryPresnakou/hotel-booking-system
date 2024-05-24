@@ -1,16 +1,10 @@
 package com.presnakov.hotelBookingSystem.service;
 
-import com.presnakov.hotelBookingSystem.dao.UserDao;
 import com.presnakov.hotelBookingSystem.dao.UserRoleDao;
-import com.presnakov.hotelBookingSystem.dto.user.CreateUserDto;
-import com.presnakov.hotelBookingSystem.dto.user.UserCompleteDto;
 import com.presnakov.hotelBookingSystem.dto.user.UserRoleDto;
-import com.presnakov.hotelBookingSystem.entity.User;
 import com.presnakov.hotelBookingSystem.entity.UserRole;
 import com.presnakov.hotelBookingSystem.entity.UserRoleEnum;
-import com.presnakov.hotelBookingSystem.exception.ValidationException;
 import com.presnakov.hotelBookingSystem.mapper.CreateUserMapper;
-import com.presnakov.hotelBookingSystem.validator.CreateUserValidator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

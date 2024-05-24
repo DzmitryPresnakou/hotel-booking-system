@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.presnakov.hotelBookingSystem.datasourse.UrlPath.ROOMS;
+
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
@@ -40,6 +42,6 @@ public class LoginServlet extends HttpServlet {
     @SneakyThrows
     private void onLoginSuccess(UserCompleteDto user, HttpServletRequest req, HttpServletResponse resp) {
         req.getSession().setAttribute("user", user);
-        resp.sendRedirect("/rooms");
+        resp.sendRedirect(ROOMS);
     }
 }

@@ -4,13 +4,6 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="${pageContext.request.contextPath}css/products.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <script type="text/javascript"
-            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <%@include file="header.jsp" %>
     <title><fmt:message key="page.users.title"/></title>
 </head>
@@ -24,17 +17,18 @@
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <c:choose>
-                <c:when test="${requestScope.isDeleted}">
+                <c:when test="${requestScope.isDeleted || requestScope.isTryToDeleteMyself}">
                     <div class="list-group-item">
+                        <c:if test="${requestScope.isDeleted}">
                         <div>
                             <span><h5><fmt:message key="page.users.delete.message"/> ${requestScope.message}</h5></span>
                         </div>
-                        <c:url value="/users" var="inputURL">
-                            <%-- <c:param name="id" value="${user.id}"/>--%>
-                        </c:url>
-                        <a href="${inputURL}">
-                            <button type="button" class="btn btn-info"><fmt:message key="page.users.show.users.ref"/></button>
-                        </a>
+                        </c:if>
+                        <c:if test="${requestScope.isTryToDeleteMyself}">
+                            <div>
+                                <span><h5><fmt:message key="page.users.not.delete.message"/></h5></span>
+                            </div>
+                        </c:if>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -48,8 +42,8 @@
                                             <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.first.name"/>: ${user.firstName}</p>
                                             <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.last.name"/>: ${user.lastName}</p>
                                             <p class="mt-0 font-weight-bold mb-2"><fmt:message key="page.users.first.role"/>: ${fn:toLowerCase(user.userRoleDto.userRoleEnum)}</p>
-
-                                            <c:url var="deleteUrl" value="${pageContext.request.contextPath}users/delete">
+                                            <c:url var="deleteUrl"
+                                                   value="${pageContext.request.contextPath}users/delete">
                                                 <c:param name="id" value="${user.id}"/>
                                             </c:url>
                                             <a href="${deleteUrl}">
