@@ -34,8 +34,7 @@
 
                     <p class="mt-0 font-weight-bold mb-2"><fmt:message
                             key="page.book-room.room.price"/>:
-                        <fmt:setLocale value="en_US"/>
-                        <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay}" type="currency"/>
+                        <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay * requestScope.currencyRate}" type="currency"/>
                     </p>
 
                     <label class="mt-0 font-weight-bold mb-2" for="checkInDateId"><fmt:message

@@ -37,8 +37,7 @@
 
                     <p class="mt-0 font-weight-bold mb-2"><fmt:message
                             key="page.place-order.room.price"/>:
-                        <fmt:setLocale value="en_US"/>
-                        <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay * requestScope.period}"
+                        <fmt:formatNumber value="${requestScope.room.roomClassDto.pricePerDay * requestScope.period * requestScope.currencyRate}"
                                           type="currency"/>
                     </p>
 

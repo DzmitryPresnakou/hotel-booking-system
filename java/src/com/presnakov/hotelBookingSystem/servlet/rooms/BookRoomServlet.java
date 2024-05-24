@@ -31,12 +31,20 @@ public class BookRoomServlet extends HttpServlet {
     private final String ORDER_STATUS_OPEN = "OPEN";
     private final String PAYMENT_STATUS_DECLINED = "DECLINED";
     private final String ROOM_STATUS_UNAVAILABLE = "UNAVAILABLE";
+    private final Integer CURRENCY_RATE_USD = 1;
+    private final Integer CURRENCY_RATE_RUR = 100;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(CONTENT_TYPE);
         Integer id = Integer.valueOf(req.getParameter("id"));
         RoomCompleteDto roomCompleteDto = roomService.getRoom(id);
+
+        if ("ru_RU".equals(req.getSession().getAttribute("lang"))) {
+            req.setAttribute("currencyRate", CURRENCY_RATE_RUR);
+        } else {
+            req.setAttribute("currencyRate", CURRENCY_RATE_USD);
+        }
 
         req.setAttribute("room", roomCompleteDto);
         req.getRequestDispatcher(JspHelper.getPath("book-room"))
@@ -46,6 +54,7 @@ public class BookRoomServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         resp.setContentType(CONTENT_TYPE);
+
         UserCompleteDto userCompleteDto = (UserCompleteDto) req.getSession().getAttribute("user");
         Integer id = Integer.valueOf(req.getParameter("id"));
 

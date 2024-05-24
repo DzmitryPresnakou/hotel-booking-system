@@ -63,8 +63,7 @@
                                                 key="page.rooms.room.class"/>: ${fn:toLowerCase(room.roomClassDto.comfortClass)}</p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.room.price"/>:
-                                            <fmt:setLocale value="en_US"/>
-                                            <fmt:formatNumber value="${room.roomClassDto.pricePerDay}" type="currency"/>
+                                            <fmt:formatNumber value="${room.roomClassDto.pricePerDay * requestScope.currencyRate}" type="currency"/>
                                         </p>
                                         <p class="mt-0 font-weight-bold mb-2"><fmt:message
                                                 key="page.rooms.room.status"/>: ${fn:toLowerCase(room.roomStatusDto.roomStatusEnum)}</p>

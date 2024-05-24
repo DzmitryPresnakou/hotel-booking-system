@@ -20,6 +20,8 @@ public class RoomsServlet extends HttpServlet {
     private final String CONTENT_TYPE = "text/html";
     private final RoomStatusEnum ROOM_STATUS_AVAILABLE = RoomStatusEnum.AVAILABLE;
     private final UserRoleEnum USER_ROLE_ADMIN = UserRoleEnum.ADMIN;
+    private final Integer CURRENCY_RATE_USD = 1;
+    private final Integer CURRENCY_RATE_RUR = 100;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,6 +34,13 @@ public class RoomsServlet extends HttpServlet {
             req.setAttribute("isAdmin", false);
         }
         req.setAttribute("rooms", roomService.findAll());
+
+        if ("ru_RU".equals(req.getSession().getAttribute("lang"))) {
+            req.setAttribute("currencyRate", CURRENCY_RATE_RUR);
+        } else {
+            req.setAttribute("currencyRate", CURRENCY_RATE_USD);
+        }
+
         req.setAttribute("availableRoom", ROOM_STATUS_AVAILABLE);
         req.getRequestDispatcher(JspHelper.getPath("rooms"))
                 .forward(req, resp);
